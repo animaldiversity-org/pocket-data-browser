@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pocket Data Browser</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+    <script src="https://unpkg.com/sql.js@1.6.2/dist/sql-wasm.js"></script>
+
+<style>
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-ExtraLight.ttf');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-Light.ttf');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-Regular.ttf');
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-SemiBold.ttf');
+        font-weight: 600;
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-Bold.ttf');
+        font-weight: 700;
+      }
+
+      @font-face {
+        font-family: 'Poppins';
+        src: url('/fonts/Poppins/Poppins-ExtraBold.ttf');
+        font-weight: 800;
+      }
+
+      :root {
+        --bs-light-rgb: #fff;
+        --bs-nav-link-color: green;
+        --bs-primary: #3c74a7;
+        --bs-body-font-family: 'Poppins', system-ui, '-apple-system', "Segoe UI", "Roboto"  ;
+      }
+
+      .navbar-nav {
+        --bs-nav-link-color: var(--bs-primary);
+      }
+
+      #app {
+        width: calc(768px + 1rem + 8px);
+        margin: 1rem auto;
+        min-height: 90vh;
+        border: 4px solid #666;
+        border-radius: 8px;
+        padding: 1rem;
+      }
+
+      .accordion {
+        --bs-accordion-bg: #eee;
+        --bs-accordion-active-bg: #fff;
+        --bs-accordion-active-color: #333;
+      }
+
+      .accordion-item {
+        background-color: var(--bs-accordion-active-bg);
+      }
+      
+      .accordion-item:not(:first-of-type) {
+        border-top: 1px solid var(--bs-accordion-border-color);
+      }
+
+      .accordion-item + .accordion-item {
+        margin-top: 1rem;
+      }
+
+      button.accordion-button div[data-slot="observers"] {
+        display: none;
+      }
+      
+      button.accordion-button.collapsed div[data-slot="observers"] {
+        display: block;
+      }
+
+      .form-group {
+        margin-bottom: 0 !important;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="module">
+
+      const loadScripts = function() {
+        let scripts_urls = ['/src/main.js'];
+        scripts_urls.forEach((script_url) => {
+          let scriptEl = document.createElement('script');
+          scriptEl.type = 'module';
+          scriptEl.src = script_url; //  + '?_{{ts}}';
+          document.body.appendChild(scriptEl);
+          console.log("-- loaded", script_url);
+        })
+      };
+
+      const sqlPromise = initSqlJs({
+        locateFile: filename => `https://unpkg.com/sql.js@1.6.2/dist/${filename}`
+        // locateFile: filename => `/${filename}`
+      });
+
+      sqlPromise.then(function(SQL) {
+        window.SQL = SQL;
+        loadScripts();
+      })
+
+    </script>
+    <!-- <script type="module" src="/src/main.js"></script> -->
+  </body>
+</html>
