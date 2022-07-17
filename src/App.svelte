@@ -44,7 +44,7 @@
       </div>
       <ul class="why-so-complicated list-unstyled fs-5">
         <li class="nav-item">
-          <a class="btn btn-outline-primary p-2" href="/#/note">
+          <a class="btn btn-outline-primary p-2" href="/note/add">
             <Icon name="plus-square" /> New Note
           </a>
         </li>
@@ -56,19 +56,19 @@
   <Collapse {isOpen} navbar>
     <Nav class="ms-auto fs-5" navbar>
       <NavItem>
-        <NavLink href="/#/about"><Icon name="info-square" /> About</NavLink>
+        <NavLink href="/about"><Icon name="info-square" /> About</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/#/places"><Icon name="globe" /> Places</NavLink>
+        <NavLink href="/places"><Icon name="globe" /> Places</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/#/idguide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
+        <NavLink href="/idguide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
       </NavItem>
       <NavItem>
-        <NavLink href="/#/species-categories"><Icon name="search" /> Animal Finder</NavLink>          
+        <NavLink href="/species-categories"><Icon name="search" /> Animal Finder</NavLink>          
       </NavItem>
       <NavItem>
-        <NavLink href="/#/notes"><Icon name="card-text" /> Notes</NavLink>          
+        <NavLink href="/notes"><Icon name="card-text" /> Notes</NavLink>          
       </NavItem>
     </Nav>
   </Collapse>
@@ -92,11 +92,13 @@
     <Route path="/guide/">
       <TopicPage />
     </Route>
-    <Route path="/note/create" firstmatch>
-      <NoteForm noteId="blank" />
-    </Route>
-    <Route path="/note/:uuid" let:meta>
-      <NoteForm noteId={meta.params.uuid} />
+    <Route path="/note/*" firstmatch>
+      <Route path="/add">
+        <NoteForm noteId="blank" message="add" />
+      </Route>
+      <Route path="/:uuid" let:meta>
+        <NoteForm noteId={meta.params.uuid} message="uuid" />
+      </Route>
     </Route>
   </Transition>
   

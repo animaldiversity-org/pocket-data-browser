@@ -7,12 +7,15 @@
   import { Card, CardBody, Image } from 'sveltestrap';
   import { Col, Container, Row } from 'sveltestrap';
 
+  import { Canvas, Layer } from 'svelte-canvas';
+
   import NoteManager from '../lib/NoteManager.js';
 
   import { meta } from 'tinro';
   const routeData = meta();
 
   export let noteId = "false";
+  export let message;
 
   let rosterData = [
     'sightsurvival@univhigh.edu',
@@ -123,9 +126,10 @@
   let note;
   $: intialized = false;
   // $: noteId = $routeData.params.uuid || $routeData.pattern;
-  if ( noteId == 'create' ) {
+  if ( noteId == 'blank' ) {
     note = JSON.parse(JSON.stringify(blankNote));
-    console.log("-- blank note", $routeData.params);
+    console.log("-- blank note", $routeData.params, note);
+    setTimeout(() => { intialized = true; }, 0);
     intialized = true;
   } else if ( true || ! intialized ) {
     console.log("-- have note uuid", noteId);
@@ -218,15 +222,40 @@
   $: filterExpr = new RegExp(searchTerm);
   $: filteredRosterData = rosterData.filter(item => item.match(filterExpr));
 
+
+  let renderImageUpload = function({ context, width, height }) {
+
+  }
+
   $: if ( files ) {
     console.log("-- files", files);
     for(const file of files) {
       if ( processedFiles[file.name] ) { continue; }
       processedFiles[file.name] = true;
       const reader = new FileReader();
-      reader.addEventListener("load", function () {
-        images.push(reader.result);
-        images = images;
+      let img = new window.Image();
+      reader.addEventListener("load", function (e) {
+        let canvas = document.querySelector('#preview');
+        img.addEventListener('load', function(event) {
+          let width = img.width; let height = img.height; 
+          if ( width > height ) {
+            height = height * ( 1024 / width );
+            width = 1024;
+          } else {
+            width = width * ( 1024 / height );
+            height = 1024;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          let ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+        });
+        img.src = e.target.result;
+        // images.push(reader.result);
+        // images = images;
       });
       reader.readAsDataURL(file);
     }
@@ -336,6 +365,7 @@
     </Row>
   </Container>
 </Form>
+<canvas id="preview" width="1024" height="1024"></canvas>
 {:else}
-<pre>Initializing form...</pre>
+<pre>Initializing form... {intialized}</pre>
 {/if}
