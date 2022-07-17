@@ -1,5 +1,5 @@
 <script>
-  import { db } from './db';
+  import { db } from '../lib/db';
   import { meta } from 'tinro';
   const routeData = meta();
 

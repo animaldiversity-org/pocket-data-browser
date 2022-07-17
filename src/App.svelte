@@ -1,7 +1,7 @@
 <script>
 
   import {Route, router} from 'tinro';
-  import Transition from './lib/Transition.svelte';
+  import Transition from './components/Transition.svelte';
 
   import {
     Collapse,
@@ -14,7 +14,8 @@
 
   import { db, isReady } from './lib/db';
 
-  import TopicPage from './lib/TopicPage.svelte';
+  import TopicPage from './components/TopicPage.svelte';
+  import NoteForm from './components/NoteForm.svelte';
 
   router.mode.hash();
   router.subscribe(_ => window.scrollTo(0, 0));
@@ -90,6 +91,12 @@
     </Route>
     <Route path="/guide/">
       <TopicPage />
+    </Route>
+    <Route path="/note/create" firstmatch>
+      <NoteForm noteId="blank" />
+    </Route>
+    <Route path="/note/:uuid" let:meta>
+      <NoteForm noteId={meta.params.uuid} />
     </Route>
   </Transition>
   
