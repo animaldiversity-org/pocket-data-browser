@@ -16,6 +16,7 @@
 
   import TopicPage from './components/TopicPage.svelte';
   import NoteForm from './components/NoteForm.svelte';
+  import NoteList from './components/NoteList.svelte';
 
   router.mode.hash();
   router.subscribe(_ => window.scrollTo(0, 0));
@@ -44,7 +45,7 @@
       </div>
       <ul class="why-so-complicated list-unstyled fs-5">
         <li class="nav-item">
-          <a class="btn btn-outline-primary p-2" href="/note/add">
+          <a class="btn btn-outline-primary p-2" href="/notes/add">
             <Icon name="plus-square" /> New Note
           </a>
         </li>
@@ -62,7 +63,7 @@
         <NavLink href="/places"><Icon name="globe" /> Places</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/idguide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
+        <NavLink href="/guide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
       </NavItem>
       <NavItem>
         <NavLink href="/species-categories"><Icon name="search" /> Animal Finder</NavLink>          
@@ -86,18 +87,23 @@
         <p>So not ready</p>
       {/if}
     </Route>
-    <Route path="/guide/:id" firstmatch>
-      <TopicPage />
+    <Route path="/guide/*" firstmatch>
+      <Route path="/:id" let:meta>
+        <TopicPage id="{meta.params.id}" />
+      </Route>
+      <Route path="/">
+        <TopicPage />
+      </Route>
     </Route>
-    <Route path="/guide/">
-      <TopicPage />
-    </Route>
-    <Route path="/note/*" firstmatch>
+    <Route path="/notes/*" firstmatch>
       <Route path="/add">
         <NoteForm noteId="blank" message="add" />
       </Route>
       <Route path="/:uuid" let:meta>
         <NoteForm noteId={meta.params.uuid} message="uuid" />
+      </Route>
+      <Route path="/">
+        <NoteList />
       </Route>
     </Route>
   </Transition>
@@ -124,9 +130,9 @@
   }
 
   footer {
-    margin-left: -1rem;
+    /* margin-left: -1rem;
     margin-right: -1rem;
-    margin-bottom: -1rem;
+    margin-bottom: -1rem; */
     margin-top: 4rem;
   }
 </style>

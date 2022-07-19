@@ -58,8 +58,10 @@ class NoteManager {
     return response;
   }
 
-  static deleteNote(id) {
-
+  static async deleteNote(uuid) {
+    // let note = await indexedDb.notesdb.get(uuid);
+    // note.deleted = (new Date).getTime();
+    await indexedDB.notesdb.update(uuid, { deleted: (new Date).getTime() });
   }
 
   static uploadImage(file, uuid) {

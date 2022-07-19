@@ -11,7 +11,7 @@
 
   import NoteManager from '../lib/NoteManager.js';
 
-  import { meta } from 'tinro';
+  import { meta, router } from 'tinro';
   const routeData = meta();
 
   export let noteId = "false";
@@ -216,16 +216,12 @@
     note.observers = note.data.observers;
     let results = await NoteManager.saveNote(note);
     console.log("-- saveChanges", note, results);
+    router.goto('/notes');
   }
 
   let searchTerm = '';
   $: filterExpr = new RegExp(searchTerm);
   $: filteredRosterData = rosterData.filter(item => item.match(filterExpr));
-
-
-  let renderImageUpload = function({ context, width, height }) {
-
-  }
 
   $: if ( files ) {
     console.log("-- files", files);
@@ -252,6 +248,8 @@
           let ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
+          images.push(canvas.toDataURL('image/jpeg'));
+          images = images;
         });
         img.src = e.target.result;
         // images.push(reader.result);
@@ -265,6 +263,10 @@
 </script>
 
 <style>
+  canvas {
+    height: 1px;
+    width: 1px;
+  }
 </style>
 
 {#if intialized}
