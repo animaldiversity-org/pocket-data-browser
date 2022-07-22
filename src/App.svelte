@@ -75,7 +75,7 @@
   </Collapse>
 </div>
 
-<main>
+<main class="container">
 
   <Transition>
     <Route path="/">

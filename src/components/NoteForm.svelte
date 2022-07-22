@@ -273,6 +273,15 @@
 <Form>
   <Container>
     <Row class="mb-1">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/notes/">Notes</a>
+          </li>
+        </ol>
+      </nav>
+    </Row>
+    <Row class="mb-1">
       <Col>
         <Accordion class="mb-3">
           <AccordionItem on:toggle={resortObservers}>
@@ -327,7 +336,7 @@
         <Col class="p-3">
           {#if field.args.type == 'file'}
             <Accordion>
-              <AccordionItem>
+              <AccordionItem active={images.length > 0}>
                 <div slot="header">
                   <h2 class="h4">{field.label}</h2>
                 </div>
