@@ -1,5 +1,10 @@
 <script>
   import { each } from 'svelte/internal';
+  import { onMount } from 'svelte';
+
+  import * as dayjs from 'dayjs';
+  import * as utc from 'dayjs/plugin/utc';
+  dayjs.extend(utc);
 
   import { Accordion, AccordionItem, Button, ButtonGroup } from 'sveltestrap';
   import { Form, FormGroup, Input, Label, FormText } from 'sveltestrap';
@@ -16,67 +21,13 @@
 
   export let noteId = "false";
   export let message;
+  export let config;
 
-  let rosterData = [
-    'sightsurvival@univhigh.edu',
-    'suspectnuclear@univhigh.edu',
-    'everyseedling@univhigh.edu',
-    'penaltyheartpulse@univhigh.edu',
-    'mottledfeet@univhigh.edu',
-    'seafowlrecently@univhigh.edu',
-    'helicoptertreatment@univhigh.edu',
-    'leopardbellbottoms@univhigh.edu',
-    'santandershotput@univhigh.edu',
-    'greetingssaving@univhigh.edu',
-    'soychannel@univhigh.edu',
-    'agitateddove@univhigh.edu',
-    'fallaciousgrowl@univhigh.edu',
-    'twangbeetroot@univhigh.edu',
-    'watchfulrugby@univhigh.edu',
-    'competingbegan@univhigh.edu',
-    'pelvisfluttering@univhigh.edu',
-    'itselfvirtue@univhigh.edu',
-    'adoredcoati@univhigh.edu',
-    'framerich@univhigh.edu',
-    'spothandsomely@univhigh.edu',
-    'whooshcrackers@univhigh.edu',
-    'frockmedial@univhigh.edu',
-    'velvetymanner@univhigh.edu',
-    'softballlibrarian@univhigh.edu',
-    'tensesaw@univhigh.edu',
-    'keyboardluminous@univhigh.edu',
-    'surferpackage@univhigh.edu',
-    'tadayearly@univhigh.edu',
-    'slicesafety@univhigh.edu',
-    'tattereddivulge@univhigh.edu',
-    'murmuruniform@univhigh.edu',
-    'unrulyvenomous@univhigh.edu',
-    'wishpopulate@univhigh.edu',
-    'pullovereventually@univhigh.edu',
-    'startcomedy@univhigh.edu',
-    'cavernoustubby@univhigh.edu',
-    'workseight@univhigh.edu',
-    'gracefitzroy@univhigh.edu',
-    'hivetrained@univhigh.edu',
-    'putridsurround@univhigh.edu',
-    'perfumedphantom@univhigh.edu',
-    'sharpaccess@univhigh.edu',
-    'blackstonefinancial@univhigh.edu',
-    'immigratebonehead@univhigh.edu',
-    'resulttranquil@univhigh.edu',
-    'layertired@univhigh.edu',
-    'scarletlollies@univhigh.edu',
-    'individualmews@univhigh.edu',
-    'cerebellumoutcome@univhigh.edu',
-  ];
-  rosterData.sort();
+  let rosterData;
+  let activityList;
 
-  let activityList = [
-    '-- no activity --',
-    'Schoolyard Observation #1',
-    'Schoolyard Observation #2',
-    'Schoolyard Observation #3',
-  ]
+  $: rosterData = config ? config.rosterData : [];
+  $: activityList = config ? config.activityData : [];
 
   let noteSchema = [
     { name: 'animalName', label: 'What kind of animal do you think this is?', component: Input, placeholder: 'Crow, squirrel, etc.', args: { type: 'textarea' } },
@@ -87,17 +38,17 @@
     { name: 'animalHabitat', label: 'In what kind of habitat did you observe the animal?', placeholder: 'Grasses, forest, pond, etc.?', component: Input, args: { type: 'textarea' } },
     { name: 'locationDescription', label: 'Where specifically did you observe the animal?', placeholder: 'Under a leaf, on a flower, on the ground, etc.?', component: Input, args: { type: 'textarea' } },
     { name: 'animalCount', label: 'How many animals did you observe?', component: Input, placeholder: "0", help: 'Enter a number, 0-100', args: { type: 'number', min: 0, max: 100 } },
-    { name: 'timeOfDay', label: 'What time of day did you observe the animal?', component: Input, args: { type: 'datetime-local' } },
+    { name: 'observedAt', label: 'What time of day did you observe the animal?', component: Input, args: { type: 'datetime-local' } },
   ]
 
   let blankNote = {
     'summary': '',
-    'datetime': false,
+    'createdAt': false,
     'activity': '-- no activity --',
     'observers': [],
-    'lastSynced': false,
-    'deleted': false,
-    'data': {
+    'lastSynced': '0000-00-00T00:00:00+0000',
+    'deletedAt': '0000-00-00T00:00:00+0000',
+    'content': {
       'observers': [],
       'animalName': '',
       'images': [],
@@ -107,19 +58,19 @@
       'animalHabitat': '',
       'locationDescription': '',
       'animalCount': 0,
-      'timeOfDay': null
+      'observedAt': null
     }
   }
 
   if (location.hostname == 'localhost') {
-    blankNote.data.animalName = 'wombat';
-    blankNote.data.description = 'furry, squat';
-    blankNote.data.animalActions = 'pooping';
-    blankNote.data.weatherDescription = 'sunny, hot';
-    blankNote.data.animalHabitat = 'scrub';
-    blankNote.data.locationDescription = 'ground';
-    blankNote.data.animalCount = 1;
-    blankNote.data.timeOfDay = '2022-06-26T15:20:00';
+    blankNote.content.animalName = 'wombat';
+    blankNote.content.description = 'furry, squat';
+    blankNote.content.animalActions = 'pooping';
+    blankNote.content.weatherDescription = 'sunny, hot';
+    blankNote.content.animalHabitat = 'scrub';
+    blankNote.content.locationDescription = 'ground';
+    blankNote.content.animalCount = 1;
+    // blankNote.content.observedAt = '2022-06-26T15:20:00';
   }
 
   console.log("-- routeData", $routeData, noteId);
@@ -147,8 +98,8 @@
   let selectedActivity;
 
   $: if ( intialized ) {
-    observers = note.data.observers;
-    images = note.data.images;
+    observers = note.content.observers;
+    images = note.content.images;
     selectedActivity = note.activity;
   }
   
@@ -207,13 +158,18 @@
     // if ( note.activity != '-- no activity --' ) {
     //   summary.push(note.activity);
     // }
-    summary.push(note.data.animalName.replace(/\n+/g, ' ').replace(/ +/g, ' '));
-    if ( note.data.animalCount > 0 ) {
-      summary.push(`(${note.data.animalCount})`);
+    summary.push(note.content.animalName.replace(/\n+/g, ' ').replace(/ +/g, ' '));
+    if ( note.content.animalCount > 0 ) {
+      summary.push(`(${note.content.animalCount})`);
     }
+    let observedAt = note.content.observedAt || (new Date);
+    observedAt = new Date(observedAt);
+
+    note.content.observedAt = dayjs(observedAt).format('YYYY-MM-DDTHH:mm:ss');
     note.summary = summary.join(" ");
-    note.datetime = note.data.timeOfDay;
-    note.observers = note.data.observers;
+    note.createdAt = dayjs(observedAt).utc().format('YYYY-MM-DDTHH:mm:ssZZ');
+    note.observers = note.content.observers;
+    note.activity = selectedActivity;
     let results = await NoteManager.saveNote(note);
     console.log("-- saveChanges", note, results);
     router.goto('/notes');
@@ -259,6 +215,10 @@
     }
     files = '';
   }
+
+  onMount(() => {
+    console.log("-- NoteForm mounted", config);
+	});
 
 </script>
 
@@ -323,8 +283,9 @@
                 {/if}
               </div>
               <ButtonGroup vertical style="width: 100%">
+                <Button outline color='dark' active={'-- no activity --' == selectedActivity} on:click={selectActivity}>-- no activity --</Button>
                 {#each activityList as activityItem}
-                  <Button outline dark active={activityItem == selectedActivity} on:click={selectActivity}>{activityItem}</Button>
+                  <Button outline color='dark' active={activityItem == selectedActivity} on:click={selectActivity}>{activityItem}</Button>
                 {/each}
               </ButtonGroup>
             </AccordionItem>
@@ -360,7 +321,7 @@
           {:else}
             <FormGroup class="form-group">
               <Label for={'field-' + field.name} class="h4 fs-4">{field.label}</Label>
-              <svelte:component id={'field-' + field.name} this={field.component} placeholder={field.placeholder} bind:value={note.data[field.name]} {...field.args} />
+              <svelte:component id={'field-' + field.name} this={field.component} placeholder={field.placeholder} bind:value={note.content[field.name]} {...field.args} />
               {#if field.help}
                 <FormText>{field.help}</FormText>
               {/if}

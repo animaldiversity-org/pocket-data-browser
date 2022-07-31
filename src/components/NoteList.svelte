@@ -1,15 +1,17 @@
 <script>
 
   import { liveQuery } from "dexie";
-  import { indexedDB } from '../lib/indexedDB';
+  import { pocketDB } from '../lib/storage';
   import NoteManager from "../lib/NoteManager";
 
   import { Table } from 'sveltestrap';
   import { Col, Container, Row } from 'sveltestrap';
   import { Button, Icon } from 'sveltestrap';
 
+  import * as dayjs from 'dayjs';
+
   let notes = liveQuery(
-    () => indexedDB.notesdb.where('deleted').equals('false').reverse().sortBy('datetime')
+    () => pocketDB.notesdb.where('deletedAt').equals('0000-00-00T00:00:00+0000').reverse().sortBy('createdAt')
   );
 
   function deleteNote(uuid) {
@@ -21,15 +23,7 @@
   
   function _formatDate(datetime) {
     let date = new Date(datetime);
-    // return date.toLocaleString();
-    let hh = date.getHours();
-    let ampm = 'AM';
-    if ( hh > 12 ) {
-      ampm = 'PM';
-      hh -= 12;
-    }
-    let mm = date.getMinutes();
-    return `${date.toLocaleDateString()}<br />${hh}:${mm} ${ampm}`;
+    return dayjs(date).format('MM/DD/YYYY') + '<br />' + dayjs(date).format('hh:mm A');
   }
 
   function _formatObserver(observers) {
@@ -92,12 +86,12 @@
               </td>
               <td>{note.summary}</td>
               <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
-              <td class="td--date">{@html _formatDate(note.datetime)}</td>
+              <td class="td--date">{@html _formatDate(note.createdAt)}</td>
               <td style="white-space: nowrap">
-                <Button outline dark href="/notes/{note.uuid}">
+                <Button outline dark href="/notes/{note.id}">
                   <Icon name="pencil-square" />
                 </Button>
-                <Button outline dark on:click={() => deleteNote(note.uuid)}>
+                <Button outline dark on:click={() => deleteNote(note.id)}>
                   <Icon name="trash" />
                 </Button>
               </td>

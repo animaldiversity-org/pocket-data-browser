@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
 
   import {Route, router} from 'tinro';
   import Transition from './components/Transition.svelte';
@@ -13,10 +14,14 @@
   } from 'sveltestrap';
 
   import { db, isReady } from './lib/db';
+  import AuthManager from './lib/AuthManager';
 
   import TopicPage from './components/TopicPage.svelte';
   import NoteForm from './components/NoteForm.svelte';
   import NoteList from './components/NoteList.svelte';
+  import LoginForm from './components/LoginForm.svelte';
+
+  import NoteManager from './lib/NoteManager';
 
   router.mode.hash();
   router.subscribe(_ => window.scrollTo(0, 0));
@@ -31,6 +36,30 @@
 
   let isOpen = false;
   const toggle = () => (isOpen = !isOpen);
+
+  let isAuthenticated = AuthManager.isAuthenticated();
+
+  function handleAuth(event) {
+    let token = event.detail.token;
+    isAuthenticated = AuthManager.isAuthenticated();
+    if ( isAuthenticated ) {
+      NoteManager.syncNotes();
+      NoteManager.initializeCrontab();
+      AuthManager.fetchWorkspaceConfig();
+    }
+  }
+
+
+  onMount(() => {
+    if ( isAuthenticated ) {
+      NoteManager.syncNotes();
+      NoteManager.initializeCrontab();
+      AuthManager.fetchWorkspaceConfig();
+    }
+		return () => NoteManager.stopCrontab();
+	});
+  
+
 	
 </script>
 
@@ -55,6 +84,7 @@
     </div>
   </nav>
   <Collapse {isOpen} navbar>
+    <div class="p-3">
     <Nav class="ms-auto fs-5" navbar>
       <NavItem>
         <NavLink href="/about"><Icon name="info-square" /> About</NavLink>
@@ -71,41 +101,48 @@
       <NavItem>
         <NavLink href="/notes"><Icon name="card-text" /> Notes</NavLink>          
       </NavItem>
-    </Nav>
+    </Nav>          
+    </div>
+
   </Collapse>
 </div>
 
-<main class="container">
+<main class="container mt-3">
 
   <Transition>
-    <Route path="/">
-      {#if $db}
-        <p>AHOY READY</p>
-        <p>{fetchRow().title}</p>
-        <p><a href="/guide/{fetchRow().id}">Click Here</a></p>
-      {:else}
-        <p>So not ready</p>
-      {/if}
-    </Route>
-    <Route path="/guide/*" firstmatch>
-      <Route path="/:id" let:meta>
-        <TopicPage id="{meta.params.id}" />
-      </Route>
+    {#if isAuthenticated}      
       <Route path="/">
-        <TopicPage />
+        {#if $db}
+          <p>AHOY READY</p>
+          <p>{fetchRow().title}</p>
+          <p><a href="/guide/{fetchRow().id}">Click Here</a></p>
+        {:else}
+          <p>So not ready</p>
+        {/if}
       </Route>
-    </Route>
-    <Route path="/notes/*" firstmatch>
-      <Route path="/add">
-        <NoteForm noteId="blank" message="add" />
+      <Route path="/guide/*" firstmatch>
+        <Route path="/:id" let:meta>
+          <TopicPage id="{meta.params.id}" />
+        </Route>
+        <Route path="/">
+          <TopicPage />
+        </Route>
       </Route>
-      <Route path="/:uuid" let:meta>
-        <NoteForm noteId={meta.params.uuid} message="uuid" />
+      <Route path="/notes/*" firstmatch>
+        {@const token = AuthManager.getUser()}
+        <Route path="/add">
+          <NoteForm noteId="blank" message="add" config={AuthManager.getWorkspaceConfig()} />
+        </Route>
+        <Route path="/:uuid" let:meta>
+          <NoteForm noteId={meta.params.uuid} message="uuid" config={AuthManager.getWorkspaceConfig()} />
+        </Route>
+        <Route path="/">
+          <NoteList />
+        </Route>
       </Route>
-      <Route path="/">
-        <NoteList />
-      </Route>
-    </Route>
+  {:else}
+      <LoginForm on:auth={handleAuth} />
+  {/if}
   </Transition>
   
 </main>

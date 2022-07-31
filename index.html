@@ -9,7 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
 
-    <script src="https://unpkg.com/sql.js@1.6.2/dist/sql-wasm.js"></script>
+    <!-- <script src="https://unpkg.com/sql.js@1.6.2/dist/sql-wasm.js"></script> -->
+    <script src="/sql-wasm.js"></script>
 
 <style>
       @font-face {
@@ -94,9 +95,30 @@
         display: block;
       }
 
+      button.accordion-button div[data-slot="selectedActivity"] {
+        display: none;
+      }
+      
+      button.accordion-button.collapsed div[data-slot="selectedActivity"] {
+        display: block;
+      }
+
       .form-group {
         margin-bottom: 0 !important;
       }
+
+      .btn.navbar-toggler {
+        background-color: #fff !important;
+      }
+
+      .navbar-collapse {
+        box-shadow: 0px 4px 4px -4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* .btn.navbar-toggler:active .navbar-toggler-icon,
+      .btn.navbar-toggler:hover .navbar-toggler-icon {
+        filter: invert(1);
+      } */
 
     </style>
 
@@ -118,8 +140,8 @@
       };
 
       const sqlPromise = initSqlJs({
-        locateFile: filename => `https://unpkg.com/sql.js@1.6.2/dist/${filename}`
-        // locateFile: filename => `/${filename}`
+        // locateFile: filename => `https://unpkg.com/sql.js@1.6.2/dist/${filename}`
+        locateFile: filename => `/${filename}`
       });
 
       sqlPromise.then(function(SQL) {

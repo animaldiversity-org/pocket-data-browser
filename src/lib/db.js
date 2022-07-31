@@ -1,11 +1,11 @@
 import { readable } from 'svelte/store';
-import { indexedDB } from './indexedDB';
+import { pocketDB } from './storage';
 
 export let isReady = readable(false);
 async function loadDatabase() {
   let db; let data;
   console.log("--?");
-  const rows = await indexedDB.sqlitedb.where("id").equals("prototype").toArray();
+  const rows = await pocketDB.sqlitedb.where("id").equals("prototype").toArray();
   if (rows.length == 0) {
     console.log('-- loading database');
 
@@ -14,7 +14,7 @@ async function loadDatabase() {
     })
       .then(function (buffer) {
         data = new Uint8Array(buffer);
-        indexedDB.sqlitedb.add({ id: 'prototype', data: data, lastModified: (new Date).getTime() })
+        pocketDB.sqlitedb.add({ id: 'prototype', data: data, lastModified: (new Date).getTime() })
         db = new SQL.Database(data);
         return db;
       })
