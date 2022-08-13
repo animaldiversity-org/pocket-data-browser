@@ -14,7 +14,11 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true
       },
-      '^/*.db': {
+      '^/images/*': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '^/.*\.db$': {
         target: 'http://localhost:8000',
         changeOrigin: true
       }

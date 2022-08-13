@@ -14,19 +14,25 @@
   } from 'sveltestrap';
 
   import { db, isReady } from './lib/db';
+  import { imageDB } from './lib/imageDB';
   import AuthManager from './lib/AuthManager';
 
   import TopicPage from './components/TopicPage.svelte';
   import NoteForm from './components/NoteForm.svelte';
   import NoteList from './components/NoteList.svelte';
+  import AnimalFinder from './components/AnimalFinder.svelte';
+  import TaxonAccount from './components/TaxonAccount.svelte';
   import LoginForm from './components/LoginForm.svelte';
+  import HomePage from './components/HomePage.svelte';
 
   import NoteManager from './lib/NoteManager';
+  import TaxonManager from './lib/TaxonManager';
 
   router.mode.hash();
   router.subscribe(_ => window.scrollTo(0, 0));
 
   console.log($db);
+  console.log($imageDB);
   let fetchRow = function() {
     let statement = $db.prepare('SELECT * FROM nodes_topic WHERE id = 583');
     let result = statement.getAsObject({});
@@ -89,9 +95,9 @@
       <NavItem>
         <NavLink href="/about"><Icon name="info-square" /> About</NavLink>
       </NavItem>
-      <NavItem>
+      <!-- <NavItem>
         <NavLink href="/places"><Icon name="globe" /> Places</NavLink>
-      </NavItem>
+      </NavItem> -->
       <NavItem>
         <NavLink href="/guide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
       </NavItem>
@@ -112,13 +118,7 @@
   <Transition>
     {#if isAuthenticated}      
       <Route path="/">
-        {#if $db}
-          <p>AHOY READY</p>
-          <p>{fetchRow().title}</p>
-          <p><a href="/guide/{fetchRow().id}">Click Here</a></p>
-        {:else}
-          <p>So not ready</p>
-        {/if}
+        <HomePage />
       </Route>
       <Route path="/guide/*" firstmatch>
         <Route path="/:id" let:meta>
@@ -128,13 +128,24 @@
           <TopicPage />
         </Route>
       </Route>
+      <Route path="/species-categories/*" firstmatch>
+        <Route path="/:id" let:meta>
+          <AnimalFinder id={meta.params.id} />
+        </Route>
+        <Route path="/">
+          <AnimalFinder />
+        </Route>
+      </Route>
+      <Route path="/species-information/:id" let:meta>
+        <TaxonAccount id={meta.params.id} />
+      </Route>
       <Route path="/notes/*" firstmatch>
         {@const token = AuthManager.getUser()}
         <Route path="/add">
           <NoteForm noteId="blank" message="add" config={AuthManager.getWorkspaceConfig()} />
         </Route>
-        <Route path="/:uuid" let:meta>
-          <NoteForm noteId={meta.params.uuid} message="uuid" config={AuthManager.getWorkspaceConfig()} />
+        <Route path="/:id" let:meta>
+          <NoteForm noteId={meta.params.id} message="uuid" config={AuthManager.getWorkspaceConfig()} />
         </Route>
         <Route path="/">
           <NoteList />
