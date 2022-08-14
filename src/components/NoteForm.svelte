@@ -3,8 +3,8 @@
   import { onMount } from 'svelte';
 
   import dayjs from 'dayjs';
-  import * as utc from 'dayjs/plugin/utc';
-  dayjs.extend(utc.default);
+  import utc from 'dayjs/plugin/utc.js';
+  dayjs.extend(utc);
 
   import { Accordion, AccordionItem, Button, ButtonGroup } from 'sveltestrap';
   import { Form, FormGroup, Input, Label, FormText } from 'sveltestrap';

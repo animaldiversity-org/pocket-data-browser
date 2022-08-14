@@ -2,8 +2,8 @@ import { pocketDB } from './storage';
 import { liveQuery } from "dexie";
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
-import * as utc from 'dayjs/plugin/utc';
-dayjs.extend(utc.default);
+import utc from 'dayjs/plugin/utc.js';
+dayjs.extend(utc);
 window.dayjs = dayjs;
 
 import AuthManager from './AuthManager';

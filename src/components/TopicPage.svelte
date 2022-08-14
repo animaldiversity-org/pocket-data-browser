@@ -3,6 +3,8 @@
   import { meta } from 'tinro';
   const routeData = meta();
 
+  import Image from './Image.svelte';
+
   const rootId = 579;
   let content;
   let hasPreviewImages = false;
@@ -97,7 +99,8 @@
           <div class="p-grid shadow-sm">
             {#each section.images.edges as image}
               <figure>
-                <img src="{image.node.src}" alt="{image.node.title}" />
+                <Image style="max-height: 80vh; max-width: 100%; width: auto !important;" src={image.node.src} classes="d-block ww-100" alt={`${image.node.title}`} />
+                <!-- <img src="{image.node.src}" alt="{image.node.title}" /> -->
                 {#if image.node.caption}
                 <figcaption>
                   {@html image.node.caption}
