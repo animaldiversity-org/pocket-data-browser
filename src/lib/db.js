@@ -32,11 +32,19 @@ async function loadDatabase() {
 
 export const db = readable(null, set => {
   console.log("-- taxon db start");
-  loadDatabase().then((value) => { 
-    console.log("-- taxon db loaded", value);
-    // isReady = true; 
-    set(value) 
+  const sqlPromise = initSqlJs({
+    // locateFile: filename => `https://unpkg.com/sql.js@1.6.2/dist/${filename}`
+    locateFile: filename => `/${filename}`
   });
+  sqlPromise.then(function(SQL) {
+    window.SQL = SQL;
+    loadDatabase().then((value) => {
+      console.log("-- taxon db loaded", value);
+      // isReady = true; 
+      set(value)
+    });
+  })
+
 })
 
 // export const isReady = readable(_isReady);

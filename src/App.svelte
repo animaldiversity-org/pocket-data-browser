@@ -58,6 +58,18 @@
 
 
   onMount(() => {
+
+    let $span = document.querySelector('#preload-message');
+    $span.style.display = 'none';
+    document.querySelector('#app').dataset.initialized = true;
+    
+    // this is read only so fudge some data
+    window.isReadOnly = true;
+    localStorage.setItem('diamond-fork-01.config', '{"activityData":["Schoolyard Observations 1","Schoolyard Observations 2"],"rosterData":["adoredcoati@univhigh.edu","agitateddove@univhigh.edu","blackstonefinancial@univhigh.edu","cavernoustubby@univhigh.edu","cerebellumoutcome@univhigh.edu","competingbegan@univhigh.edu","everyseedling@univhigh.edu","fallaciousgrowl@univhigh.edu","framerich@univhigh.edu","frockmedial@univhigh.edu","gracefitzroy@univhigh.edu","greetingssaving@univhigh.edu","helicoptertreatment@univhigh.edu","hivetrained@univhigh.edu","immigratebonehead@univhigh.edu","individualmews@univhigh.edu","itselfvirtue@univhigh.edu","keyboardluminous@univhigh.edu","layertired@univhigh.edu","leopardbellbottoms@univhigh.edu","mottledfeet@univhigh.edu","murmuruniform@univhigh.edu","pelvisfluttering@univhigh.edu","penaltyheartpulse@univhigh.edu","perfumedphantom@univhigh.edu","pullovereventually@univhigh.edu","putridsurround@univhigh.edu","resulttranquil@univhigh.edu","santandershotput@univhigh.edu","scarletlollies@univhigh.edu","seafowlrecently@univhigh.edu","sharpaccess@univhigh.edu","sightsurvival@univhigh.edu","slicesafety@univhigh.edu","softballlibrarian@univhigh.edu","soychannel@univhigh.edu","spothandsomely@univhigh.edu","startcomedy@univhigh.edu","surferpackage@univhigh.edu","suspectnuclear@univhigh.edu","tadayearly@univhigh.edu","tattereddivulge@univhigh.edu","tensesaw@univhigh.edu","twangbeetroot@univhigh.edu","unrulyvenomous@univhigh.edu","velvetymanner@univhigh.edu","watchfulrugby@univhigh.edu","whooshcrackers@univhigh.edu","wishpopulate@univhigh.edu","workseight@univhigh.edu"],"timestamp":1660502474}');
+    localStorage.setItem('token', '{"token":"719ec5e24efe979d9ce939e6eadf730bafa5098a","user_id":59,"username":"science1","workspaces":[{"slug":"diamond-fork-01","name":"1st Period Science","organization":"Diamond Fork"}],"currentWorkspace":"diamond-fork-01"}');
+
+    isAuthenticated = AuthManager.isAuthenticated();
+
     if ( isAuthenticated ) {
       NoteManager.syncNotes();
       NoteManager.initializeCrontab();
