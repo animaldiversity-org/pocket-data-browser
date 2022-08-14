@@ -148,7 +148,7 @@
           <NoteForm noteId={meta.params.id} message="uuid" config={AuthManager.getWorkspaceConfig()} />
         </Route>
         <Route path="/">
-          <NoteList />
+          <NoteList config={AuthManager.getWorkspaceConfig()} />
         </Route>
       </Route>
     {:else}

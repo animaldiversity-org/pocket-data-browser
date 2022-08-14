@@ -7,8 +7,16 @@
   import { Table, TabContent, TabPane } from 'sveltestrap';
   import { Col, Container, Row } from 'sveltestrap';
   import { Button, Icon } from 'sveltestrap';
+  import {
+    ButtonDropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle
+  } from 'sveltestrap';
 
   import * as dayjs from 'dayjs';
+
+  export let config;
 
   let notes = liveQuery(
     () => pocketDB.notesdb.where('deletedAt').equals('0000-00-00T00:00:00+0000').reverse().sortBy('createdAt')
@@ -36,6 +44,28 @@
     return html;
   }
 
+  function _filterPossibleActivities(notes) {
+    let results = [];
+    let seen = {};
+    console.log("-- possibleActivities", notes);
+    notes.forEach((note) => {
+      let activity = note.activity;
+      console.log("--", activity);
+      if ( activity ) {
+        seen[activity] = true;
+      }
+    })
+    config.activityData.forEach((activity) => {
+      console.log(":::", activity);
+      if ( seen[activity] ) {
+        results.push(activity);
+      }
+    })
+    return results;
+  }
+
+  $: possibleActivities = _filterPossibleActivities($notes || []);
+
 </script>
 
 <style>
@@ -62,6 +92,27 @@
     <Col>
       <TabContent pills>
         <TabPane tabId="our-data" tab="Our Data" active>
+          <form>
+            <div class="row d-flex g-3 align-items-center justify-content-end">
+              {#if possibleActivities.length}
+                <div class="col-auto">
+                  <ButtonDropdown>
+                    <DropdownToggle color="secondary" caret class="btn-sm">
+                      Filter by Activity
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      {#each possibleActivities as activity}
+                        <DropdownItem>{activity}</DropdownItem>                    
+                      {/each}
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </div>
+              {/if}
+              <div class="col-auto">
+                <button class="btn btn-secondary btn-sm">Download</button>
+              </div>
+            </div>
+          </form>
           <Table striped hover class="mt-3">
             <thead class="table-dark">
               <tr>
