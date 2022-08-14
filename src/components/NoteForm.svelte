@@ -2,9 +2,9 @@
   import { each } from 'svelte/internal';
   import { onMount } from 'svelte';
 
-  import * as dayjs from 'dayjs';
+  import dayjs from 'dayjs';
   import * as utc from 'dayjs/plugin/utc';
-  dayjs.extend(utc);
+  dayjs.extend(utc.default);
 
   import { Accordion, AccordionItem, Button, ButtonGroup } from 'sveltestrap';
   import { Form, FormGroup, Input, Label, FormText } from 'sveltestrap';
