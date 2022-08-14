@@ -20,7 +20,7 @@
     } else {
       const decoder = new TextDecoder();
       data = decoder.decode(row.data);
-      imageSrc = navigator.onLine ? src : `data:image/jpeg;base64,${data}`;
+      imageSrc = ( false && navigator.onLine ) ? src : `data:image/jpeg;base64,${data}`;
     }
     // console.log("-- Image", data, src, global_id);
   }

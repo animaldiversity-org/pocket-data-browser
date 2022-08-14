@@ -17,6 +17,7 @@
   import { imageDB } from './lib/imageDB';
   import AuthManager from './lib/AuthManager';
 
+  import AboutPage from './components/AboutPage.svelte';
   import TopicPage from './components/TopicPage.svelte';
   import NoteForm from './components/NoteForm.svelte';
   import NoteList from './components/NoteList.svelte';
@@ -119,6 +120,9 @@
     {#if isAuthenticated}      
       <Route path="/">
         <HomePage />
+      </Route>
+      <Route path="/about">
+        <AboutPage />
       </Route>
       <Route path="/guide/*" firstmatch>
         <Route path="/:id" let:meta>
