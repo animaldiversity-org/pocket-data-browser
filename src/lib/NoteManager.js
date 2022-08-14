@@ -101,7 +101,7 @@ class NoteManager {
 
   static async syncNotes() {
 
-    if ( navigator.onLine == false ) {
+    if ( navigator.onLine == false || window.isReadOnly === true ) {
       console.log("-- syncNotes: offline");
       return;
     }
@@ -165,9 +165,8 @@ class NoteManager {
   }
 
   static async loadExampleData() {
-    let check = pocketDB.notesdb.where('owner').equals('demo').toArray();
+    let check = await pocketDB.notesdb.where('owner').equals('demo').toArray();
     if ( check.length ) { return ; }
-    return;
 
     let request = await fetch("/example_data.json");
     let data = await request.json();

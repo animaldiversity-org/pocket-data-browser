@@ -8,7 +8,7 @@ async function loadDatabase() {
   if (rows.length == 0) {
     console.log('-- loading database');
 
-    fetch('/pocket-images.db').then(function (res) {
+    return fetch('/pocket-images.db').then(function (res) {
       return res.arrayBuffer();
     })
       .then(function (buffer) {
