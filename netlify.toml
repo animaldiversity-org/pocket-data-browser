@@ -1,0 +1,14 @@
+[[redirects]]
+  from = "/pocket-data-browser.db"
+  to = "https://pocketguides.animaldiversity.org/pocket-data-browser.db"
+  status = 200
+
+[[redirects]]
+  from = "/pocket-images.db"
+  to = "https://pocketguides.animaldiversity.org/pocket-images.db"
+  status = 200
+
+[[redirects]]
+  from = "/images/:splat"
+  to = "https://pocketguides.animaldiversity.org/:splat"
+  status = 200
