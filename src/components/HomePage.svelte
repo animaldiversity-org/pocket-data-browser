@@ -35,11 +35,11 @@
       <a class="list-group-item list-group-action" href="/about"><Icon name="info-square" /> About</a>
       <!-- <a class="list-group-item list-group-action" href="/places"><Icon name="globe" /> Places</a> -->
       <a class="list-group-item list-group-action" href="/guide"><Icon name="bug-fill" /> Bug Guide</a>    
-      <a class="list-group-item list-group-action" href="/species-categories"><Icon name="search" /> Animal Finder</a>          
+      <a class="list-group-item list-group-action" href="/animal-finder"><Icon name="search" /> Animal Finder</a>          
       <a class="list-group-item list-group-action" href="/notes"><Icon name="card-text" /> Notes</a>          
       <a class="list-group-item list-group-action" href="/notes/add"><Icon name="plus-square" /> New Note</a>          
     </div>
   {:else}
-    <p>So not ready</p>
+    <p>Loading PocketGuides database...</p>
   {/if}
 </section>

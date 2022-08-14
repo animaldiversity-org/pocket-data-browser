@@ -87,6 +87,7 @@ class TaxonManager {
       return {};
     }
     let info = content.taxonInformation;
+    info.title = info.vernacularName ? info.vernacularName : info.scientificName;
     info.categoryId = row.category_id;
     info.id = row.id;
     info.slug = row.slug;
@@ -170,19 +171,19 @@ class TaxonManager {
   static search(searchTerm) {
     let $db = get(db);
     let sql = `
-  SELECT id, 'taxonCategory' AS typeOf, scientific_name, vernacular_name 
+  SELECT id, 'taxonCategory' AS typeOf, scientific_name, vernacular_name, content 
   FROM nodes_taxoncategory
   WHERE scientific_name LIKE :q1 OR vernacular_name LIKE :q1
   UNION
-  SELECT id, 'taxonCategory' AS typeOf, scientific_name, vernacular_name 
+  SELECT id, 'taxonCategory' AS typeOf, scientific_name, vernacular_name, content 
   FROM nodes_taxoncategory
   WHERE scientific_name LIKE :q2 OR vernacular_name LIKE :q2
   UNION
-  SELECT id, 'taxonInformation' AS typeOf, scientific_name, vernacular_name 
+  SELECT id, 'taxonInformation' AS typeOf, scientific_name, vernacular_name, content 
   FROM nodes_taxoninformation
   WHERE ( scientific_name LIKE :q1 OR vernacular_name LIKE :q1 ) AND is_category = 0
   UNION
-  SELECT id, 'taxonInformation' AS typeOf, scientific_name, vernacular_name 
+  SELECT id, 'taxonInformation' AS typeOf, scientific_name, vernacular_name, content
   FROM nodes_taxoninformation
   WHERE ( scientific_name LIKE :q2 OR vernacular_name LIKE :q2 ) AND is_category = 0
 `;
@@ -190,7 +191,7 @@ class TaxonManager {
     let stmt = $db.prepare(sql);
     stmt.bind({ ':q1': `% ${searchTerm}%`, ':q2': '${searchTerm}%' });
 
-    let rows = [];
+    let results = { taxonCategory: [], taxonInformation: [] };
     let seen = {};
     while (stmt.step()) {
       let row = stmt.getAsObject();
@@ -205,15 +206,18 @@ class TaxonManager {
         typeOf: row.typeOf,
         previewImage: null
       }
-      if ( result.typeOf == 'taxonCategory' && row.content ) {
+      if ( result.typeOf == 'taxonCategory' ) {
         let content = JSON.parse(row.content)
         result.previewImage = content.previewImage;
+        results.taxonCategory.push(result);
       } else if ( result.typeOf == 'taxonInformation' ) {
         let content = JSON.parse(row.content);
         result.previewImage = content.taxonInformation.previewImage;
+        results.taxonInformation.push(result);
       }
-      console.log("--:", row.id, row.scientific_name, row.vernacular_name, row.typeOf);
+      // console.log("--:", row.id, row.scientific_name, row.vernacular_name, row.typeOf);
     }
+    return results;
   }
 
   static db() {

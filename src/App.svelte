@@ -102,7 +102,7 @@
         <NavLink href="/guide"><Icon name="bug-fill" /> Bug Guide</NavLink>    
       </NavItem>
       <NavItem>
-        <NavLink href="/species-categories"><Icon name="search" /> Animal Finder</NavLink>          
+        <NavLink href="/animal-finder"><Icon name="search" /> Animal Finder</NavLink>          
       </NavItem>
       <NavItem>
         <NavLink href="/notes"><Icon name="card-text" /> Notes</NavLink>          
@@ -128,7 +128,7 @@
           <TopicPage />
         </Route>
       </Route>
-      <Route path="/species-categories/*" firstmatch>
+      <Route path="/animal-finder/*" firstmatch>
         <Route path="/:id" let:meta>
           <AnimalFinder id={meta.params.id} />
         </Route>
@@ -136,7 +136,7 @@
           <AnimalFinder />
         </Route>
       </Route>
-      <Route path="/species-information/:id" let:meta>
+      <Route path="/accounts/:id" let:meta>
         <TaxonAccount id={meta.params.id} />
       </Route>
       <Route path="/notes/*" firstmatch>
@@ -151,19 +151,22 @@
           <NoteList />
         </Route>
       </Route>
-  {:else}
-      <LoginForm on:auth={handleAuth} />
-  {/if}
+    {:else}
+        <LoginForm on:auth={handleAuth} />
+    {/if}
   </Transition>
   
 </main>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center p-3 border-top text-bg-dark">
   <div class="col-md-8 d-flex flex-column gap-2">
-    <a href="/" class="text-white text-decoration-none lh-1">
-      Animal Diversity Web
-    </a>
-    <span class="xxx-mb-3">© 2022 Animal Diversity Web and LIFE Project</span>
+    <div>
+      <span class="xxx-mb-3">© 2022</span>
+      <span>•</span>
+      <a class="text-white text-decoration-none lh-1" href="https://lrhe.utah.edu/">Life Right Here & Everywhere</a>
+      <span>•</span>
+      <a class="text-white text-decoration-none lh-1" href="https://animaldiversity.org">Animal Diversity Web</a>
+    </div>
   </div>
 </footer>
 

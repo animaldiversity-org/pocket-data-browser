@@ -4,7 +4,7 @@
   import { pocketDB } from '../lib/storage';
   import NoteManager from "../lib/NoteManager";
 
-  import { Table } from 'sveltestrap';
+  import { Table, TabContent, TabPane } from 'sveltestrap';
   import { Col, Container, Row } from 'sveltestrap';
   import { Button, Icon } from 'sveltestrap';
 
@@ -60,45 +60,52 @@
   </Row>
   <Row>
     <Col>
-      <Table striped hover>
-        <thead class="table-dark">
-          <tr>
-            <!-- <th>#</th> -->
-            <th>Activity</th>
-            <th>Summary</th>
-            <th>Observers</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          {#each ($notes || []) as note, noteIdx}
-            <tr>
-              <!-- <th scope="row">
-                {noteIdx}
-              </th> -->
-              <td>
-                {#if ! note.activity || note.activity == '-- no activity --'}
-                  -
-                {:else}
-                  {note.activity}
-                {/if}
-              </td>
-              <td>{note.summary}</td>
-              <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
-              <td class="td--date">{@html _formatDate(note.createdAt)}</td>
-              <td style="white-space: nowrap">
-                <Button outline dark href="/notes/{note.id}">
-                  <Icon name="pencil-square" />
-                </Button>
-                <Button outline dark on:click={() => deleteNote(note.id)}>
-                  <Icon name="trash" />
-                </Button>
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </Table>
+      <TabContent pills>
+        <TabPane tabId="our-data" tab="Our Data" active>
+          <Table striped hover class="mt-3">
+            <thead class="table-dark">
+              <tr>
+                <!-- <th>#</th> -->
+                <th>Activity</th>
+                <th>Summary</th>
+                <th>Observers</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              {#each ($notes || []) as note, noteIdx}
+                <tr>
+                  <!-- <th scope="row">
+                    {noteIdx}
+                  </th> -->
+                  <td>
+                    {#if ! note.activity || note.activity == '-- no activity --'}
+                      -
+                    {:else}
+                      {note.activity}
+                    {/if}
+                  </td>
+                  <td>{note.summary}</td>
+                  <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
+                  <td class="td--date">{@html _formatDate(note.createdAt)}</td>
+                  <td style="white-space: nowrap">
+                    <Button outline dark href="/notes/{note.id}">
+                      <Icon name="pencil-square" />
+                    </Button>
+                    <Button outline dark on:click={() => deleteNote(note.id)}>
+                      <Icon name="trash" />
+                    </Button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </Table>
+        </TabPane>
+        <TabPane tabId="example-data" tab="Example Data">
+
+        </TabPane>
+      </TabContent>
     </Col>
   </Row>
 </Container>

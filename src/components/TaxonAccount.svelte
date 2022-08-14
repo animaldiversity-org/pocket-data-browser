@@ -27,28 +27,37 @@
   let assets = [];
   let items = [];
   let activeIndex = 0;
+  let isRemote = false;
   
   $: if ( $db ) {
 
-    info = TaxonManager.getTaxonInformationById(id);
+    info = isNaN(id) ? 
+      TaxonManager.getTaxonInformationBySlug(`accounts/${id}`) : 
+      TaxonManager.getTaxonInformationById(id);
 
-    let parentId = info.categoryId;
-    while ( parentId ) {
-      let parent = TaxonManager.getCategory(parentId);
-      breadcrumbs.push(parent);
-      parentId = parent.parentId;
+    if ( info ) {
+      let parentId = info.categoryId;
+      while ( parentId ) {
+        let parent = TaxonManager.getCategory(parentId);
+        breadcrumbs.push(parent);
+        parentId = parent.parentId;
+      }
+
+      if ( info.images ) {
+        assets = []; items = [];
+        info.images.edges.forEach((edge) => {
+          assets.push(edge.node);
+          items.push(edge.node.src);
+        })
+      } else if ( info.previewImage ) {
+        assets = [ info.previewImage ];
+        items = [ info.previewImage.src ];
+      }
+      isRemote = false;
+    } else {
+      isRemote = true;
     }
 
-    if ( info.images ) {
-      assets = []; items = [];
-      info.images.edges.forEach((edge) => {
-        assets.push(edge.node);
-        items.push(edge.node.src);
-      })
-    } else if ( info.previewImage ) {
-      assets = [ info.previewImage ];
-      items = [ info.previewImage.src ];
-    }
 
     console.log("-- assets", assets, items);
 
@@ -115,6 +124,28 @@
     justify-content: center
   }
 
+  .dd-flex {
+    display: flex;
+  }
+
+  span[data-is-native] {
+    display: block;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0.25rem 1rem;
+    margin: 0.25rem 0;
+    flex-basis: 100%;
+    font-size: 0.6em;
+  }
+
+  span[data-is-native="true"] {
+    background: #568203;
+  }
+
+  span[data-is-native="false"] {
+    background: goldenrod;
+  }
+
 </style>
 
 {#if info}
@@ -122,11 +153,11 @@
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="/species-categories/">Animal Finder</a>
+        <a href="/animal-finder/">Animal Finder</a>
       </li>
       {#each breadcrumbs as breadcrumb}
         <li class="breadcrumb-item">
-          <a href="/species-categories/{breadcrumb.id}">
+          <a href="/animal-finder/{breadcrumb.id}">
             <i class="bi bi-folder"></i>
             {breadcrumb.title}
           </a>
@@ -139,22 +170,29 @@
     </ol>
   </nav>
 
-  <article>
+  <article class="p-3 pt-0">
     <h1>
       <SpeciesHeader record={info} isHeading={true} isSpecies={isSpecies} />
+      {#if info.facts}
+        {#if info.facts.isNative == true}
+          <span data-is-native="true">Native</span>
+        {:else if info.facts.isNative == false}
+          <span data-is-native="false">Introduced</span>
+        {/if}
+      {/if}
     </h1>
 
     <Container>
       {#if assets.length}
         <Row class="mb-3">
-          <Carousel {items} bind:activeIndex>
+          <Carousel {items} bind:activeIndex ride={false}>
             <CarouselIndicators bind:activeIndex {items} />
 
             <div class="carousel-inner">
               {#each items as image, index}
-                <CarouselItem bind:activeIndex itemIndex={index}>
+                <CarouselItem bind:activeIndex itemIndex={index} class="dd-flex align-items-center justify-content-center bg-black">
                   <!-- <img src={image} class="d-block w-100" alt={`${assets[index].title} ${index + 1}`} /> -->
-                  <Image src={image} classes="d-block w-100" alt={`${assets[index].title} ${index + 1}`} />
+                  <Image style="max-height: 80vh; width: auto !important;" src={image} classes="d-block ww-100" alt={`${assets[index].title} ${index + 1}`} />
                 </CarouselItem>
               {/each}
             </div>
@@ -178,5 +216,7 @@
   </article>
 
 {:else}
-<pre>ALAS WAITING FOR CATEGORY</pre>
+  <div class="alert alert-secondary" role="alert">
+    This account is available <a target="_blank" href="https://animaldiversity.org/accounts/{id}/">online</a>.
+  </div>
 {/if}
