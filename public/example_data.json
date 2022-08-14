@@ -1,0 +1,67 @@
+[
+  {
+    "id": "5880ea36-1c27-47d7-8537-c722f1967972",
+    "summary": "PeliCAN",
+    "createdAt": "2022-08-09 10:51:17.972234+00",
+    "updatedAt": "2022-08-09 10:51:17.972267+00",
+    "content": "{\"images\": [{\"id\": \"Tm90ZUltYWdlVHlwZTo1NGIzZDI3My03MWZhLTQ2ZjYtYjEwOC1hZjRlOTcxN2UwMjQ=\", \"src\": \"https://pocketguides.animaldiversity.org/uploads/DRivk7sJi3n9d2GzkGcqsL93k9Y=/54b3d273-71fa-46f6-b108-af4e9717e024/width-600/4/c/4/IMG_20180511_145823.jpg\"}], \"activity\": \"Example LRHE Observations\", \"username\": \"holly.cordner@utah.edu\", \"timeOfDay\": \"4:00 PM\", \"animalName\": \"Pelican\", \"animalCount\": \"2\", \"description\": \"White, orange bill, big\", \"animalActions\": \"Swimming\", \"animalHabitat\": \"At the Jordan River\", \"weatherDescription\": \"Cloudy\", \"locationDescription\": \"Swimming in the river\"}",
+    "owner": "demo",
+    "activity": "Example LRHE Observations",
+    "observers": [
+      "holly.cordner@utah.edu"
+    ],
+    "deletedAt": "0000-00-00T00:00:00+0000"
+  },
+  {
+    "id": "c8ebe083-031c-4a54-b3ac-d446864c5b09",
+    "summary": "Oh yes Katydid",
+    "createdAt": "2022-08-09 10:47:51.260535+00",
+    "updatedAt": "2022-08-09 10:47:51.260579+00",
+    "content": "{\"images\": [{\"id\": \"Tm90ZUltYWdlVHlwZTo0OGQ4NGZiNi1hMTVmLTRhNmUtYThlMC04Zjk3ZGYxMDM5ZjU=\", \"src\": \"https://pocketguides.animaldiversity.org/uploads/hs6Hd9xtblv8VLScuCymR4UeZkU=/48d84fb6-a15f-4a6e-a8e0-8f97df1039f5/width-600/d/9/8/IMG_20220809_044536.jpg\"}], \"activity\": \"Example LRHE Observations\", \"username\": \"holly.cordner@utah.edu\", \"timeOfDay\": \"5:00 PM\", \"animalName\": \"Katydid\", \"animalCount\": 1, \"description\": \"Green insect. Large-ish. Looked like a leaf.\", \"animalActions\": \"Sunbathing on my car. I moved him/her to a better location in the grass using a piece of paper I had in said car.\", \"animalHabitat\": \"Urban\", \"weatherDescription\": \"Sunny \", \"locationDescription\": \"A car\"}",
+    "owner": "demo",
+    "activity": "Example LRHE Observations",
+    "observers": [
+      "holly.cordner@utah.edu"
+    ],
+    "deletedAt": "0000-00-00T00:00:00+0000"
+  },
+  {
+    "id": "0278d464-b64a-48df-a1c0-52e23b40cf6b",
+    "summary": "Butterfly in the sky",
+    "createdAt": "2022-08-09 10:40:18.608858+00",
+    "updatedAt": "2022-08-09 10:40:18.608882+00",
+    "content": "{\"images\": [], \"activity\": \"Example LRHE Observations\", \"username\": \"holly.cordner@utah.edu\", \"timeOfDay\": \"3:15 PM\", \"animalName\": \"Butterfly\", \"animalCount\": 1, \"description\": \"A whitish yellow or yellowish white butterfly\", \"animalActions\": \"Flying. I see a lot of these always crossing the road in front of my car, and because I'm a squishy animal lover, I try to slow down so as not to hit them. BUT WHERE ARE THEY GOING? Why are they always crossing the road?\", \"animalHabitat\": \"By a bush near where I live\", \"weatherDescription\": \"Sunny\", \"locationDescription\": \"Flying around the bush \"}",
+    "owner": "demo",
+    "activity": "Example LRHE Observations",
+    "observers": [
+      "holly.cordner@utah.edu"
+    ],
+    "deletedAt": "0000-00-00T00:00:00+0000"
+  },
+  {
+    "id": "f7913957-8882-48ea-8fab-3e66ffc345ec",
+    "summary": "Cats",
+    "createdAt": "2022-08-09 10:35:27.611664+00",
+    "updatedAt": "2022-08-09 10:35:46.514476+00",
+    "content": "{\"images\": [{\"id\": \"Tm90ZUltYWdlVHlwZTo2NGZmNjhmZC00ZGZlLTQzYTktYWYxYy1iMWQ0NGM5MTBmMGU=\", \"src\": \"https://pocketguides.animaldiversity.org/uploads/rvgpQ8hg4cQPQEQtvgiSp-TVlIg=/64ff68fd-4dfe-43a9-af1c-b1d44c910f0e/width-600/5/f/0/PXL_20220808_055846329.jpg\"}], \"activity\": \"Example LRHE Observations\", \"username\": \"holly.cordner@utah.edu\", \"timeOfDay\": \"3:45 AM\", \"animalName\": \"Cats, cats, cats. Kind of hard to mistake them for much else.\", \"animalCount\": \"3\", \"description\": \"Furry, cute.\", \"animalActions\": \"There's a cat that sometimes shows up outside of my apartment window in the middle of the night and yells at the top of its lungs. The cats who live with me then generally go to the window and stare at the bush that it's hiding in.\", \"animalHabitat\": \"A bush outside my window\", \"weatherDescription\": \"Clear\", \"locationDescription\": \"In my house and outside.\"}",
+    "owner": "demo",
+    "activity": "Example LRHE Observations",
+    "observers": [
+      "holly.cordner@utah.edu"
+    ],
+    "deletedAt": "0000-00-00T00:00:00+0000"
+  },
+  {
+    "id": "85e4e01e-7d9e-44b2-b298-de18157cbedb",
+    "summary": "Dogs",
+    "createdAt": "2022-08-09 10:29:57.517548+00",
+    "updatedAt": "2022-08-09 10:29:57.517579+00",
+    "content": "{\"images\": [], \"activity\": \"Example LRHE Observations\", \"username\": \"holly.cordner@utah.edu\", \"timeOfDay\": \"3:00 PM\", \"animalName\": \"Dog\", \"animalCount\": \"5\", \"description\": \"Furry, four legs. Many different colors and sizes.\", \"animalActions\": \"Walking with their humans. Sometimes taking a potty break.\", \"animalHabitat\": \"On the sidewalk, but going off into the grass sometimes to sniff and do business.\", \"weatherDescription\": \"Sunny or nighttime.\", \"locationDescription\": \"See above\"}",
+    "owner": "demo",
+    "activity": "Example LRHE Observations",
+    "observers": [
+      "holly.cordner@utah.edu"
+    ],
+    "deletedAt": "0000-00-00T00:00:00+0000"
+  }
+]

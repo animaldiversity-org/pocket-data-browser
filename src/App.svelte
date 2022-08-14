@@ -142,13 +142,13 @@
       <Route path="/notes/*" firstmatch>
         {@const token = AuthManager.getUser()}
         <Route path="/add">
-          <NoteForm noteId="blank" message="add" config={AuthManager.getWorkspaceConfig()} />
+          <NoteForm noteId="blank" message="add" config={AuthManager.getWorkspaceConfig()} token={token} />
         </Route>
         <Route path="/:id" let:meta>
-          <NoteForm noteId={meta.params.id} message="uuid" config={AuthManager.getWorkspaceConfig()} />
+          <NoteForm noteId={meta.params.id} message="uuid" config={AuthManager.getWorkspaceConfig()} token={token} />
         </Route>
         <Route path="/">
-          <NoteList config={AuthManager.getWorkspaceConfig()} />
+          <NoteList config={AuthManager.getWorkspaceConfig()} token={token} />
         </Route>
       </Route>
     {:else}

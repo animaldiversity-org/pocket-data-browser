@@ -75,6 +75,9 @@ class NoteManager {
 
   static async getNote(uuid) {
     let response = await pocketDB.notesdb.get(uuid);
+    if (typeof(response.content) == "string") {
+      response.content = JSON.parse(response.content);
+    }
     return response;
   }
 
@@ -111,7 +114,7 @@ class NoteManager {
 
     let notes = await pocketDB.notesdb
       .where('syncToken').equals(syncData.syncToken)
-      .filter((v) => { return v.updatedAt >= lastSynced || v.lastSynced == '0000-00-00T00:00:00+0000' })
+      .filter((v) => { return v.owner != 'demo' && ( v.updatedAt >= lastSynced || v.lastSynced == '0000-00-00T00:00:00+0000' ) })
       .toArray()
     let resp = await fetch('/api/sync_notes/', {
       method: 'POST',
@@ -161,7 +164,22 @@ class NoteManager {
     if (ix) { console.log("-- NoteManager: stopping interval"); clearInterval(ix); }
   }
 
+  static async loadExampleData() {
+    let check = pocketDB.notesdb.where('owner').equals('demo').toArray();
+    if ( check.length ) { return ; }
+    return;
+
+    let request = await fetch("/example_data.json");
+    let data = await request.json();
+    data.forEach((datum) => {
+      pocketDB.notesdb.add(datum);
+    })
+    console.log("-- example data loaded");
+  }
+
 }
+
+NoteManager.loadExampleData();
 
 window.NoteManager = NoteManager;
 export default NoteManager;

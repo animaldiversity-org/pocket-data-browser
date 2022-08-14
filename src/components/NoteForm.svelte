@@ -22,9 +22,12 @@
   export let noteId = "false";
   export let message;
   export let config;
+  export let token;
 
   let rosterData;
   let activityList;
+  let isReadOnly = false;
+  let isEditable = true;
 
   $: rosterData = config ? config.rosterData : [];
   $: activityList = config ? config.activityData : [];
@@ -86,7 +89,18 @@
     console.log("-- have note uuid", noteId);
     NoteManager.getNote(noteId).then((data) => {
       note = data;
+      if ( note.content.timeOfDay ) {
+        let parts = note.createdAt.split(/[ \+]/);
+        let time = note.content.timeOfDay.split(/[ :]/);
+        let ampm = time.pop();
+        if ( ampm == 'PM' ) { time[0] = parseInt(time[0], 10) + 12; }
+        // note.content.observedAt = parts[0] + ' ' + note.content.timeOfDay + '+' + parts.pop();
+        note.content.observedAt = `${parts[0]} ${time[0]}:${time[1]}:00`;
+        console.log('-- synthesized', note.content.observedAt);
+      }
       intialized = true;
+      isReadOnly = note.owner != token.username;
+      isEditable = ! isReadOnly;
       console.log("-- have note", note);
     });
   }
@@ -98,7 +112,7 @@
   let selectedActivity;
 
   $: if ( intialized ) {
-    observers = note.content.observers;
+    observers = note.content.observers || note.observers;
     images = note.content.images;
     selectedActivity = note.activity;
   }
@@ -244,13 +258,14 @@
     <Row class="mb-1">
       <Col>
         <Accordion class="mb-3">
-          <AccordionItem on:toggle={resortObservers}>
+          <AccordionItem on:toggle={resortObservers} disadbled={isReadOnly}>
             <div slot="header">
               <h2 class="h4">Who are the observers?</h2>
               {#if observers.length}
                 <div class="m-1 p-1" data-slot="observers">{observers.join('; ')}</div>
               {/if}
             </div>
+            {#if isEditable}
             <div>
                 <FormGroup>
                   <Label for="searchRoster">Find observer</Label>
@@ -268,6 +283,7 @@
                   {/each}
                 </ListGroup>
             </div>
+            {/if}
           </AccordionItem>
         </Accordion>
       </Col>
@@ -283,9 +299,9 @@
                 {/if}
               </div>
               <ButtonGroup vertical style="width: 100%">
-                <Button outline color='dark' active={'-- no activity --' == selectedActivity} on:click={selectActivity}>-- no activity --</Button>
+                <Button outline color='dark' active={'-- no activity --' == selectedActivity} disabled={isReadOnly} on:click={selectActivity}>-- no activity --</Button>
                 {#each activityList as activityItem}
-                  <Button outline color='dark' active={activityItem == selectedActivity} on:click={selectActivity}>{activityItem}</Button>
+                  <Button outline color='dark' active={activityItem == selectedActivity} disabled={isReadOnly} on:click={selectActivity}>{activityItem}</Button>
                 {/each}
               </ButtonGroup>
             </AccordionItem>
@@ -301,16 +317,20 @@
                 <div slot="header">
                   <h2 class="h4">{field.label}</h2>
                 </div>
-                <FormGroup>
-                  <Input type="file" accept="image/*" aria-label="Select files" placeholder={field.placeholder} bind:files />
-                </FormGroup>
+                {#if isEditable}
+                  <FormGroup>
+                    <Input type="file" accept="image/*" aria-label="Select files" placeholder={field.placeholder} bind:files />
+                  </FormGroup>
+                {/if}
                 {#if images}
                   <div style="display: flex; gap: 1rem; flex-wrap: wrap">
                   {#each images as image, imageIdx}
                     <Card class="mb-3" style="width: 25vw">
                       <CardBody>
-                        <Image thumbnail alt="an upload" src={image} style="display: block; width: 25vw; margin-bottom: 0.5rem;" />
-                        <Button size="sm" outline secondary on:click={() => removeImage(imageIdx)}>Delete</Button>
+                        <Image thumbnail alt="an upload" src={image.src ? image.src : image} style="display: block; width: 25vw; margin-bottom: 0.5rem;" />
+                        {#if isEditable}
+                          <Button size="sm" outline secondary on:click={() => removeImage(imageIdx)}>Delete</Button>
+                        {/if}
                       </CardBody>
                     </Card>
                   {/each}
@@ -321,7 +341,7 @@
           {:else}
             <FormGroup class="form-group">
               <Label for={'field-' + field.name} class="h4 fs-4">{field.label}</Label>
-              <svelte:component id={'field-' + field.name} this={field.component} placeholder={field.placeholder} bind:value={note.content[field.name]} {...field.args} />
+              <svelte:component id={'field-' + field.name} this={field.component} placeholder={field.placeholder} disabled={isReadOnly} bind:value={note.content[field.name]} {...field.args} />
               {#if field.help}
                 <FormText>{field.help}</FormText>
               {/if}
@@ -330,11 +350,13 @@
         </Col>
       </Row>
     {/each}
+    {#if isEditable}
     <Row>
       <Col>
         <Button color="primary" size="lg" on:click="{saveChanges}">Save</Button>
       </Col>
     </Row>
+    {/if}
   </Container>
 </Form>
 <canvas id="preview" width="1024" height="1024"></canvas>

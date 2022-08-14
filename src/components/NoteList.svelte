@@ -4,9 +4,9 @@
   import { pocketDB } from '../lib/storage';
   import NoteManager from "../lib/NoteManager";
 
-  import { Table, TabContent, TabPane } from 'sveltestrap';
+  import { Table } from 'sveltestrap';
   import { Col, Container, Row } from 'sveltestrap';
-  import { Button, Icon } from 'sveltestrap';
+  import { Button, ButtonGroup, Icon } from 'sveltestrap';
   import {
     ButtonDropdown,
     DropdownItem,
@@ -17,9 +17,26 @@
   import * as dayjs from 'dayjs';
 
   export let config;
+  export let token;
 
-  let notes = liveQuery(
-    () => pocketDB.notesdb.where('deletedAt').equals('0000-00-00T00:00:00+0000').reverse().sortBy('createdAt')
+  // initial value
+  let username = sessionStorage.getItem('selectedUsername') || token.username;
+
+  let queries = {};
+  queries[token.username] = liveQuery(
+    () =>  pocketDB.notesdb
+            .where('deletedAt').equals('0000-00-00T00:00:00+0000')
+            .and((v) => v.owner == username)
+            .reverse()
+            .sortBy('createdAt')
+  );
+
+  queries.demo = liveQuery(
+    () =>  pocketDB.notesdb
+            .where('deletedAt').equals('0000-00-00T00:00:00+0000')
+            .and((v) => v.owner == 'demo')
+            .reverse()
+            .sortBy('createdAt')
   );
 
   function deleteNote(uuid) {
@@ -64,6 +81,12 @@
     return results;
   }
 
+  function selectUsername(event) {
+    username = event.target.value;
+    sessionStorage.setItem('selectedUsername', username);
+  }
+
+  $: notes = queries[username];
   $: possibleActivities = _filterPossibleActivities($notes || []);
 
 </script>
@@ -85,78 +108,84 @@
 <Container>
   <Row>
     <Col>
-      <h1>Notes</h1>
+      <h1>Notes: {username}</h1>
     </Col>
   </Row>
   <Row>
     <Col>
-      <TabContent pills>
-        <TabPane tabId="our-data" tab="Our Data" active>
-          <form>
-            <div class="row d-flex g-3 align-items-center justify-content-end">
-              {#if possibleActivities.length}
-                <div class="col-auto">
-                  <ButtonDropdown>
-                    <DropdownToggle color="secondary" caret class="btn-sm">
-                      Filter by Activity
-                    </DropdownToggle>
-                    <DropdownMenu>
-                      {#each possibleActivities as activity}
-                        <DropdownItem>{activity}</DropdownItem>                    
-                      {/each}
-                    </DropdownMenu>
-                  </ButtonDropdown>
-                </div>
-              {/if}
-              <div class="col-auto">
-                <button class="btn btn-secondary btn-sm">Download</button>
-              </div>
-            </div>
-          </form>
-          <Table striped hover class="mt-3">
-            <thead class="table-dark">
-              <tr>
-                <!-- <th>#</th> -->
-                <th>Activity</th>
-                <th>Summary</th>
-                <th>Observers</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider">
-              {#each ($notes || []) as note, noteIdx}
-                <tr>
-                  <!-- <th scope="row">
-                    {noteIdx}
-                  </th> -->
-                  <td>
-                    {#if ! note.activity || note.activity == '-- no activity --'}
-                      -
-                    {:else}
-                      {note.activity}
-                    {/if}
-                  </td>
-                  <td>{note.summary}</td>
-                  <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
-                  <td class="td--date">{@html _formatDate(note.createdAt)}</td>
-                  <td style="white-space: nowrap">
-                    <Button outline dark href="/notes/{note.id}">
-                      <Icon name="pencil-square" />
-                    </Button>
-                    <Button outline dark on:click={() => deleteNote(note.id)}>
-                      <Icon name="trash" />
-                    </Button>
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </Table>
-        </TabPane>
-        <TabPane tabId="example-data" tab="Example Data">
+      <ButtonGroup>
+        <input on:change={selectUsername} type="radio" class="btn-check" name="btnradio" id="btn-our-data" autocomplete="off" value={token.username} checked={token.username == username}>
+        <label class="btn btn-outline-primary" for="btn-our-data">Our Data</label>
 
-        </TabPane>
-      </TabContent>
+        <input on:change={selectUsername} type="radio" class="btn-check" name="btnradio" id="btn-example-data" value={'demo'} checked={'demo' == username} autocomplete="off">
+        <label class="btn btn-outline-primary" for="btn-example-data">Example Data</label>
+      </ButtonGroup>
+    </Col>
+  </Row>
+  <Row>
+    <Col>
+      <form>
+        <div class="row d-flex g-3 align-items-center justify-content-end">
+          {#if possibleActivities.length}
+            <div class="col-auto">
+              <ButtonDropdown>
+                <DropdownToggle color="secondary" caret class="btn-sm">
+                  Filter by Activity
+                </DropdownToggle>
+                <DropdownMenu>
+                  {#each possibleActivities as activity}
+                    <DropdownItem>{activity}</DropdownItem>                    
+                  {/each}
+                </DropdownMenu>
+              </ButtonDropdown>
+            </div>
+          {/if}
+          <div class="col-auto">
+            <button class="btn btn-secondary btn-sm">Download</button>
+          </div>
+        </div>
+      </form>
+      <Table striped hover class="mt-3">
+        <thead class="table-dark">
+          <tr>
+            <!-- <th>#</th> -->
+            <th>Activity</th>
+            <th>Summary</th>
+            <th>Observers</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          {#each ($notes || []) as note, noteIdx}
+            <tr>
+              <!-- <th scope="row">
+                {noteIdx}
+              </th> -->
+              <td>
+                {#if ! note.activity || note.activity == '-- no activity --'}
+                  -
+                {:else}
+                  {note.activity}
+                {/if}
+              </td>
+              <td>{note.summary}</td>
+              <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
+              <td class="td--date">{@html _formatDate(note.createdAt)}</td>
+              <td style="white-space: nowrap">
+                <Button outline dark href="/notes/{note.id}">
+                  <Icon name="pencil-square" />
+                </Button>
+                {#if note.owner == token.username}
+                  <Button outline dark on:click={() => deleteNote(note.id)}>
+                    <Icon name="trash" />
+                  </Button>
+                {/if}
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </Table>
     </Col>
   </Row>
 </Container>
