@@ -137,6 +137,7 @@
   let selectActivity = function(event) {
     event.preventDefault();
     selectedActivity = event.target.textContent;
+    note.activity = selectedActivity;
     console.log("--!", selectedActivity, event.target.textContent);
   }
 
