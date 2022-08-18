@@ -88,7 +88,7 @@
       <div class="d-flex gap-3">
         <NavbarToggler on:click={toggle} class="sm" />
         <a class="navbar-brand" href="/" style="height: 3.375rem">
-          <img style="height: 100%; width: 100%" src="https://pocketguides.animaldiversity.org/assets/public/images/uncompressed/adwLogoBig.png" height="70" width="196" />
+          <img style="height: 100%; width: auto" src="/adwLogoBig.png" height="70" width="196" />
         </a>        
       </div>
       <ul class="why-so-complicated list-unstyled fs-5">

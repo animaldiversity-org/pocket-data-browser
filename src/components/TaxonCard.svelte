@@ -56,7 +56,7 @@
       {#if record.previewImage}
         <div class="figure-wrap">
           <!-- <img src="{taxonInformation.previewImage.src.replace('//images', '/images')}" style="max-height: 250px; width: auto;" /> -->
-          <Image src={record.previewImage.src.replace('//images', '/images')} style="max-height: 250px; width: auto;"  />
+          <Image src={record.previewImage.src.replace('//images', '/images')} style="max-height: 250px; width: auto; max-width: 100%;"  />
         </div>
       {:else}
         <div class="figure-wrap">

@@ -147,47 +147,49 @@
           </div>
         </div>
       </form>
-      <Table striped hover class="mt-3">
-        <thead class="table-dark">
-          <tr>
-            <!-- <th>#</th> -->
-            <th>Activity</th>
-            <th>Summary</th>
-            <th>Observers</th>
-            <th>Date</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          {#each ($notes || []) as note, noteIdx}
+      <div class="table-responsive">
+        <Table striped hover class="mt-3">
+          <thead class="table-dark">
             <tr>
-              <!-- <th scope="row">
-                {noteIdx}
-              </th> -->
-              <td>
-                {#if ! note.activity || note.activity == '-- no activity --'}
-                  -
-                {:else}
-                  {note.activity}
-                {/if}
-              </td>
-              <td>{note.summary}</td>
-              <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
-              <td class="td--date">{@html _formatDate(note.createdAt)}</td>
-              <td style="white-space: nowrap">
-                <Button outline dark href="/notes/{note.id}">
-                  <Icon name="pencil-square" />
-                </Button>
-                {#if note.owner == token.username}
-                  <Button outline dark on:click={() => deleteNote(note.id)}>
-                    <Icon name="trash" />
-                  </Button>
-                {/if}
-              </td>
+              <!-- <th>#</th> -->
+              <th>Activity</th>
+              <th>Summary</th>
+              <th>Observers</th>
+              <th>Date</th>
+              <th></th>
             </tr>
-          {/each}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody class="table-group-divider">
+            {#each ($notes || []) as note, noteIdx}
+              <tr>
+                <!-- <th scope="row">
+                  {noteIdx}
+                </th> -->
+                <td>
+                  {#if ! note.activity || note.activity == '-- no activity --'}
+                    -
+                  {:else}
+                    {note.activity}
+                  {/if}
+                </td>
+                <td>{note.summary}</td>
+                <td class="fs-0_75">{@html _formatObserver(note.observers)}</td>
+                <td class="td--date">{@html _formatDate(note.createdAt)}</td>
+                <td style="white-space: nowrap">
+                  <Button outline dark href="/notes/{note.id}">
+                    <Icon name="pencil-square" />
+                  </Button>
+                  {#if note.owner == token.username}
+                    <Button outline dark on:click={() => deleteNote(note.id)}>
+                      <Icon name="trash" />
+                    </Button>
+                  {/if}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </Table>
+      </div>
     </Col>
   </Row>
 </Container>
