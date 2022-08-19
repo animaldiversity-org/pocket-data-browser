@@ -15,7 +15,7 @@
     let stmt = $imageDB.prepare(`SELECT * FROM nodes_images WHERE image_src = :image_src`);
     let row = stmt.getAsObject({ ':image_src' : image_src });
     if ( row.data === undefined ) {
-      console.log('-- Image 404', src);
+      console.log('-- Image 404', src, image_src);
       imageSrc = navigator.onLine ? src : null;
     } else {
       const decoder = new TextDecoder();

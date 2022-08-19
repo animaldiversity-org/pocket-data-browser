@@ -4,6 +4,8 @@
   import {Route, router} from 'tinro';
   import Transition from './components/Transition.svelte';
 
+  import { registerSW } from "virtual:pwa-register";
+
   import {
     Collapse,
     NavbarToggler,
@@ -56,6 +58,9 @@
     }
   }
 
+  if ( "serviceWorker" in navigator ) {
+    registerSW();
+  }
 
   onMount(() => {
 

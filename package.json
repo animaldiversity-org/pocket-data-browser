@@ -14,7 +14,8 @@
     "svelte": "^3.44.0",
     "sveltestrap": "^5.9.0",
     "tinro": "^0.6.12",
-    "vite": "^2.9.9"
+    "vite": "^2.9.9",
+    "vite-plugin-pwa": "^0.12.3"
   },
   "dependencies": {
     "dexie": "^3.2.2",
