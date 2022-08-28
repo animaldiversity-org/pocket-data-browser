@@ -1,5 +1,5 @@
 <script>
-  import { db } from '../lib/db';
+  import { nodesDB } from '../lib/db';
   import TaxonManager from '../lib/TaxonManager';
   
   import { Col, Container, Row } from 'sveltestrap';
@@ -29,7 +29,7 @@
   let activeIndex = 0;
   let isRemote = false;
   
-  $: if ( $db ) {
+  $: if ( $nodesDB ) {
 
     info = isNaN(id) ? 
       TaxonManager.getTaxonInformationBySlug(`accounts/${id}`) : 

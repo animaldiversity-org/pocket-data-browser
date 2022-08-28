@@ -1,5 +1,5 @@
 <script>
-  import { db } from '../lib/db';
+  import { nodesDB } from '../lib/db';
   import TaxonManager from '../lib/TaxonManager';
   import { meta } from 'tinro';
 
@@ -33,7 +33,7 @@
     console.log("-- input: onKeyDown", event);
   }
   
-  $: if ( $db ) {
+  $: if ( $nodesDB ) {
 
     category = TaxonManager.getCategory(id);
     console.log("-- category", category);

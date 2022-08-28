@@ -1,5 +1,5 @@
 <script>
-  import { imageDB } from '../lib/imageDB';
+  import { imagesDB } from '../lib/db';
   export let src;
   export let classes = null;
   export let style = null;
@@ -8,11 +8,11 @@
   let data;
   let imageSrc;
 
-  $: if ( $imageDB ) {
+  $: if ( $imagesDB ) {
     let idx = src.indexOf('images/')
     let image_src = src.substring(idx);
     console.log('-- image', image_src);
-    let stmt = $imageDB.prepare(`SELECT * FROM nodes_images WHERE image_src = :image_src`);
+    let stmt = $imagesDB.prepare(`SELECT * FROM nodes_images WHERE image_src = :image_src`);
     let row = stmt.getAsObject({ ':image_src' : image_src });
     if ( row.data === undefined ) {
       console.log('-- Image 404', src, image_src);

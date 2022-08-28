@@ -1,5 +1,5 @@
 <script>
-  import { db } from '../lib/db';
+  import { nodesDB } from '../lib/db';
   import { meta } from 'tinro';
   const routeData = meta();
 
@@ -12,9 +12,9 @@
   export let id = rootId;
   
   // $: id = $routeData.params.id || rootId;
-  $: if ( $db ) {
+  $: if ( $nodesDB ) {
     if ( ! id ) { id = rootId; }
-    let stmt = $db.prepare(`SELECT * FROM nodes_topic WHERE id = :id`);
+    let stmt = $nodesDB.prepare(`SELECT * FROM nodes_topic WHERE id = :id`);
     let row = stmt.getAsObject({ ':id' : id });
     try {
       content = JSON.parse(row.content).topic;

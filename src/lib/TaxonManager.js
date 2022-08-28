@@ -1,7 +1,7 @@
 // taxondb.js
 
 import { get } from 'svelte/store'; 
-import { db } from './db';
+import { nodesDB } from './db';
 
 class TaxonManager {
 

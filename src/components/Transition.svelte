@@ -5,12 +5,12 @@
 
 <style>
     div {
-        height: 100%;
+        /* height: 100%; */
     }
 </style>
 
 {#key $router.path}
-    <div in:fade="{{ duration: 350 }}">
+    <div class="main--transition" in:fade="{{ duration: 250 }}">
         <slot></slot>
     </div>
 {/key}
