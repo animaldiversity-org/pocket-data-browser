@@ -3,6 +3,8 @@ import { pocketDB } from './storage';
 import { liveQuery } from "dexie";
 import { v4 as uuidv4 } from 'uuid';
 
+import Cookies from 'js-cookie';
+
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 dayjs.extend(utc);
@@ -133,6 +135,8 @@ class NoteManager {
       .where('syncToken').equals(get(syncData).syncToken)
       .filter((v) => { return v.owner != 'demo' && ( v.updatedAt >= lastSynced || v.lastSynced == '0000-00-00T00:00:00+0000' ) })
       .toArray()
+
+    Cookies.remove('csrftoken');
     let resp = await fetch('/api/sync_notes/', {
       method: 'POST',
       headers: {
@@ -181,6 +185,7 @@ class NoteManager {
       return;
     }
 
+    Cookies.remove('csrftoken');
     fetch('/api/download_notes/', {
       method: 'POST',
       headers: {
@@ -240,6 +245,7 @@ class NoteManager {
     let check = await pocketDB.notesdb.where('owner').equals('demo').toArray();
     if ( check.length ) { return ; }
 
+    Cookies.remove('csrftoken');
     let request = await fetch("/example_data.json");
     let data = await request.json();
     data.forEach((datum) => {

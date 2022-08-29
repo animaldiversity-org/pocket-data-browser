@@ -1,4 +1,5 @@
 import { writable, get } from 'svelte/store';
+import Cookies from 'js-cookie';
 
 export const remoteUser = writable(null, set => {
   const token = localStorage.getItem('authtoken');
@@ -26,6 +27,7 @@ export class AuthManager {
   }
 
   static login(username, password) {
+    Cookies.remove('csrftoken');
     return fetch('/api-token-auth/', {
       method: 'POST',
       headers: {
@@ -99,7 +101,7 @@ export class AuthManager {
       (now - workspaceConfig.timestamp) < (24 * 60 * 60)
     ) { return; }
 
-
+    Cookies.remove('csrftoken');
     let resp = await fetch(`/api/workspace_config/?workspace=${workspaceSlug}`, {
       method: 'GET',
       headers: {
