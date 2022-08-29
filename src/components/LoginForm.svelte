@@ -39,6 +39,7 @@
             type="text" 
             name="username" 
             id="username" 
+            autocapitalize="none"
             bind:value={username} />
         </FormGroup>
         <FormGroup>
@@ -46,18 +47,19 @@
           <Input 
             type="password" 
             name="password" 
-            id="password" 
+            id="password"
+            autocapitalize="none"
             bind:value={password} />
         </FormGroup>
         <Button color="primary" size="lg">Submit</Button>
       </form>
     </Col>
   </Row>
-  <Row>
+  <!-- <Row>
     <Col>
       <p class="mt-5">
         <a href="/forgot-password">Forgot password?</a>
       </p>
     </Col>
-  </Row>
+  </Row> -->
 </Container>

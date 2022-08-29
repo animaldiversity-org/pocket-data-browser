@@ -134,7 +134,8 @@
             {#if hasPreviewImages && ! ( edge.node.title == 'Yes' || edge.node.title == 'No' )}
               <div style="height: 250px" class="d-flex justify-content-center align-items-center card-img-top p-2">
                 {#if edge.node.previewImage }
-                  <img src="{edge.node.previewImage.src}" class="x-card-img-top flex-grow-0 d-block" style="max-height: 100%" alt="" />              
+                  <Image style="max-height: 80vh; max-width: 100%; width: auto !important;" src={edge.node.previewImage.src} classes="x-card-img-top flex-grow-0 d-block" alt="" />
+                  <!-- <img src="{edge.node.previewImage.src}" class="x-card-img-top flex-grow-0 d-block" style="max-height: 100%" alt="" />               -->
                 {/if}
               </div>
             {/if}

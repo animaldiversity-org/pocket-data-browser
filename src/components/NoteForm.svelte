@@ -76,7 +76,6 @@
     // blankNote.content.observedAt = '2022-06-26T15:20:00';
   }
 
-  console.log("-- routeData", $routeData, noteId);
   let note;
   $: intialized = false;
   // $: noteId = $routeData.params.uuid || $routeData.pattern;
@@ -131,14 +130,13 @@
       observers.push(event.target.textContent);
     }
     observers = observers;
-    console.log('--', observers.join(';'));
   }
 
   let selectActivity = function(event) {
     event.preventDefault();
     selectedActivity = event.target.textContent;
     note.activity = selectedActivity;
-    console.log("--!", selectedActivity, event.target.textContent);
+    // console.log("--!", selectedActivity, event.target.textContent);
   }
 
   let resortObservers = function(event) {
@@ -146,9 +144,9 @@
     if ( open === false && observers.length ) {
       // toggling close, so resort the observers list to put
       // put the observed first
-      console.log('-- sorting');
+      // console.log('-- sorting');
       rosterData.sort((a, b) => { 
-        console.log("--?", a, b, observers.indexOf(a), observers.indexOf(b));
+        // console.log("--?", a, b, observers.indexOf(a), observers.indexOf(b));
         let aIdx = observers.indexOf(a);
         let bIdx = observers.indexOf(b);
         if ( aIdx > -1 && bIdx > -1 ) {
@@ -186,7 +184,7 @@
     note.observers = note.content.observers;
     note.activity = selectedActivity;
     let results = await NoteManager.saveNote(note);
-    console.log("-- saveChanges", note, results);
+    // console.log("-- saveChanges", note, results);
     router.goto('/notes');
   }
 
@@ -259,7 +257,7 @@
     <Row class="mb-1">
       <Col>
         <Accordion class="mb-3">
-          <AccordionItem on:toggle={resortObservers} disadbled={isReadOnly}>
+          <AccordionItem> <!--  on:toggle={resortObservers} -->
             <div slot="header">
               <h2 class="h4">Who are the observers?</h2>
               {#if observers.length}

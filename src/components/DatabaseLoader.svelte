@@ -25,7 +25,7 @@
         console.log("-- databases loaded");
         open = false;
         isDatabaseReady.set(true);
-        router.goto(`/?_=${(new Date().getTime())}`);
+        router.goto(`/`);
       })
     } else {
       console.log("-- database was already loaded!");

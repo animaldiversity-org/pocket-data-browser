@@ -9,7 +9,7 @@ class TaxonManager {
     if ( id === null ) {
       return { title: 'Animal Finder', id: null };
     }
-    let $db = get(db);
+    let $db = get(nodesDB);
     let stmt = $db.prepare(`SELECT * FROM nodes_taxoncategory WHERE id = :id`);
     let row = stmt.getAsObject({ ':id': id });
     if (row.content) {
@@ -33,10 +33,10 @@ class TaxonManager {
 
     let parentId = ( category === undefined ) ? null : category.id;
 
-    let $db = get(db);
+    let $db = get(nodesDB);
 
     let rows = [];
-    console.log("-- taxonCategory", db, parentId);
+    console.log("-- taxonCategory", nodesDB, parentId);
     let stmt;
 
     let seen = {};
@@ -73,7 +73,7 @@ class TaxonManager {
   static getTaxonInformationBySlug(slug) {
 
     let sql = `SELECT * FROM nodes_taxoninformation WHERE slug = :slug`;
-    let $db = get(db);
+    let $db = get(nodesDB);
     let stmt = $db.prepare(sql);
     let row = stmt.getAsObject({ ':slug': slug });
     if ( row.id == undefined ) {
@@ -98,7 +98,7 @@ class TaxonManager {
   static getTaxonInformationById(id) {
 
     let sql = `SELECT * FROM nodes_taxoninformation WHERE id = :id`;
-    let $db = get(db);
+    let $db = get(nodesDB);
     let stmt = $db.prepare(sql);
     let row = stmt.getAsObject({ ':id': id });
     console.log("-- getTaxonInformation", id, row);
@@ -126,10 +126,10 @@ class TaxonManager {
 
     let categoryId = (category === undefined) ? null : category.id;
 
-    let $db = get(db);
+    let $db = get(nodesDB);
 
     let rows = [];
-    console.log("-- taxonInformation", db, categoryId);
+    console.log("-- taxonInformation", nodesDB, categoryId);
     let stmt;
 
     // also grab the category taxonInformation if present
@@ -169,7 +169,7 @@ class TaxonManager {
   }
 
   static search(searchTerm) {
-    let $db = get(db);
+    let $db = get(nodesDB);
     let sql = `
   SELECT id, 'taxonCategory' AS typeOf, scientific_name, vernacular_name, content 
   FROM nodes_taxoncategory
@@ -221,7 +221,7 @@ class TaxonManager {
   }
 
   static db() {
-    return get(db);
+    return get(nodesDB);
   }
 
 }

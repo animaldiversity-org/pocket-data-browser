@@ -88,8 +88,14 @@
     sessionStorage.setItem('selectedUsername', username);
   }
 
+  function downloadNotes(event) {
+    event.preventDefault();
+    NoteManager.downloadNotes();
+  }
+
   $: notes = queries[username];
   $: possibleActivities = _filterPossibleActivities($notes || []);
+  $: backstageLink = `/backstage?workspace_slug=${( username == 'demo' ) ? 'demo' : token.currentWorkspace}`;
 
 </script>
 
@@ -143,7 +149,10 @@
             </div>
           {/if}
           <div class="col-auto">
-            <button class="btn btn-secondary btn-sm">Download</button>
+            {#if navigator.onLine !== false}
+              <button class="btn btn-secondary btn-sm" on:click={downloadNotes}>Download</button>
+              <!-- <a tinro-ignore href={backstageLink} class="btn btn-secondary btn-sm">Download</a> -->
+            {/if}
           </div>
         </div>
       </form>

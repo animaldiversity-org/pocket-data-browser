@@ -32,6 +32,11 @@
   function onKeyDown(event) {
     console.log("-- input: onKeyDown", event);
   }
+
+  function resetSearch(event) {
+    event.preventDefault();
+    searchTerm = ''; searchResults = null;
+  }
   
   $: if ( $nodesDB ) {
 
@@ -120,7 +125,7 @@
             on:input={onChange}
             on:keydown={onKeyDown}
             />
-          <button class="btn btn-outline-secondary" type="button">
+          <button class="btn btn-outline-secondary" type="button" on:click={resetSearch}>
             <i class="bi bi-x-circle"></i>
           </button>
         </div>

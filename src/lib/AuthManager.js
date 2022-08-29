@@ -1,4 +1,21 @@
-class AuthManager {
+import { writable, get } from 'svelte/store';
+
+export const remoteUser = writable(null, set => {
+  const token = localStorage.getItem('token');
+  if ( token ) {
+    set(JSON.parse(token));
+  }
+});
+
+export const syncData = writable({}, set => {
+  let data = JSON.parse(localStorage.getItem('syncData') || '{}');
+  if ( data.syncToken === undefined ) {
+    data.syncToken = (1000 * Math.random()).toString();
+  }
+  set(data);
+});
+
+export class AuthManager {
 
   static isAuthenticated() {
     const token = localStorage.getItem('token');
@@ -24,13 +41,38 @@ class AuthManager {
     .then(res => res.json())
     .then(json => {
       localStorage.setItem('token', JSON.stringify(json));
+      remoteUser.set(json);
       return json;
     })
   }
 
+  static generateSyncToken() {
+    let syncDatum = get(syncData);
+    syncDatum.syncToken = (1000 * Math.random()).toString();
+    localStorage.setItem('syncData', JSON.stringify(syncDatum));
+    syncData.set(syncDatum);
+  }
+
+  static updateLastSynced(lastSynced) {
+    let syncDatum = get(syncData);
+    syncDatum.lastSynced = lastSynced;
+    localStorage.setItem('syncData', JSON.stringify(syncDatum));
+    console.log("-- updateLastSynced", lastSynced, syncDatum);
+    syncData.set(syncDatum);
+  }
+
+  static logout() {
+    // remove the token to stop sync
+    localStorage.removeItem('token');
+    localStorage.removeItem('syncData');
+    remoteUser.set(null);
+  }
+
   static getUser() {
-    const token = localStorage.getItem('token');
-    return JSON.parse(token);
+    // const token = localStorage.getItem('token');
+    // remoteUser.set(JSON.parse(token));
+    // console.log("-- getUser", remoteUser);
+    return get(remoteUser);
   }
 
   static getWorkspaceConfig() {
@@ -40,6 +82,9 @@ class AuthManager {
   }
 
   static async fetchWorkspaceConfig(workspaceSlug) {
+
+    if ( navigator.onLine === false ) { return ; }
+
     const token = AuthManager.getUser();
 
     if ( workspaceSlug === undefined ) {
