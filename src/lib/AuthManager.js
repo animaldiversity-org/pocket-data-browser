@@ -30,6 +30,7 @@ export class AuthManager {
     Cookies.remove('csrftoken');
     return fetch('/api-token-auth/', {
       method: 'POST',
+      credentials: 'omit',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'

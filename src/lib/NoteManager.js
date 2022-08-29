@@ -139,6 +139,7 @@ class NoteManager {
     Cookies.remove('csrftoken');
     let resp = await fetch('/api/sync_notes/', {
       method: 'POST',
+      credentials: 'omit',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -188,6 +189,7 @@ class NoteManager {
     Cookies.remove('csrftoken');
     fetch('/api/download_notes/', {
       method: 'POST',
+      credentials: 'omit',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
