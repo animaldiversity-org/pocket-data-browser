@@ -1,7 +1,7 @@
 import { writable, get } from 'svelte/store';
 
 export const remoteUser = writable(null, set => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('authtoken');
   if ( token ) {
     set(JSON.parse(token));
   }
@@ -18,7 +18,7 @@ export const syncData = writable({}, set => {
 export class AuthManager {
 
   static isAuthenticated() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authtoken');
     if (token) {
       return true;
     }
@@ -40,7 +40,7 @@ export class AuthManager {
     })
     .then(res => res.json())
     .then(json => {
-      localStorage.setItem('token', JSON.stringify(json));
+      localStorage.setItem('authtoken', JSON.stringify(json));
       remoteUser.set(json);
       return json;
     })
@@ -63,13 +63,13 @@ export class AuthManager {
 
   static logout() {
     // remove the token to stop sync
-    localStorage.removeItem('token');
+    localStorage.removeItem('authtoken');
     localStorage.removeItem('syncData');
     remoteUser.set(null);
   }
 
   static getUser() {
-    // const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('authtoken');
     // remoteUser.set(JSON.parse(token));
     // console.log("-- getUser", remoteUser);
     return get(remoteUser);
