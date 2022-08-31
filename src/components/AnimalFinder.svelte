@@ -23,14 +23,14 @@
 
   function onChange(event) {
     searchTerm = event.target.value;
-    console.log("-- input: onChange", searchTerm);
+    // console.log("-- input: onChange", searchTerm);
     if ( searchTerm == "" ) { searchResults = null; return; }
     searchResults = TaxonManager.search(searchTerm);
-    console.log("-- input:", searchResults);
+    // console.log("-- input:", searchResults);
   }
 
   function onKeyDown(event) {
-    console.log("-- input: onKeyDown", event);
+    // console.log("-- input: onKeyDown", event);
   }
 
   function resetSearch(event) {

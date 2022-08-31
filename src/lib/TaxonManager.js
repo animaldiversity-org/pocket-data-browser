@@ -189,7 +189,9 @@ class TaxonManager {
 `;
 
     let stmt = $db.prepare(sql);
-    stmt.bind({ ':q1': `% ${searchTerm}%`, ':q2': '${searchTerm}%' });
+    stmt.bind({ 
+      ':q1': `% ${searchTerm}%`, ':q2': `${searchTerm}%`
+     });
 
     let results = { taxonCategory: [], taxonInformation: [] };
     let seen = {};
@@ -215,7 +217,9 @@ class TaxonManager {
         result.previewImage = content.taxonInformation.previewImage;
         results.taxonInformation.push(result);
       }
-      // console.log("--:", row.id, row.scientific_name, row.vernacular_name, row.typeOf);
+      if ( window.debugTaxonSearch ) {
+        console.log("--:", searchTerm, row.id, row.scientific_name, row.vernacular_name, row.typeOf);
+      }
     }
     return results;
   }
