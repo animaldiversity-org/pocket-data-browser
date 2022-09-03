@@ -23,6 +23,7 @@
 
   // initial value
   let username = sessionStorage.getItem('selectedUsername') || token.username;
+  let selectedActivity = null;
 
   let queries = {};
   queries[token.username] = liveQuery(
@@ -70,27 +71,43 @@
     notes.forEach((note) => {
       let activity = note.activity;
       console.log("--", activity);
-      if ( activity ) {
+      if ( activity && activity != '-- no activity --' ) {
+        if ( ! seen[activity] ) {
+          results.push(activity);
+        }
         seen[activity] = true;
       }
     })
-    config.activityData.forEach((activity) => {
-      console.log(":::", activity);
-      if ( seen[activity] ) {
-        results.push(activity);
-      }
-    })
+    results.sort();
     return results;
+
+    // config.activityData.forEach((activity) => {
+    //   console.log(":::", activity);
+    //   if ( seen[activity] ) {
+    //     results.push(activity);
+    //   }
+    // })
+    // return results;
+  }
+
+  function selectActivity(event) {
+    selectedActivity = event.target.dataset.value;
+  }
+
+  function _filterActivities(notes, activity) {
+    if ( activity == null ) { return notes; }
+    // return $notes.filter((v) => v.activity == activity);
   }
 
   function selectUsername(event) {
     username = event.target.value;
+    selectedActivity = null;
     sessionStorage.setItem('selectedUsername', username);
   }
 
   function downloadNotes(event) {
     event.preventDefault();
-    NoteManager.downloadNotes();
+    NoteManager.downloadNotes(selectedActivity);
   }
 
   $: notes = queries[username];
@@ -137,12 +154,19 @@
           {#if possibleActivities.length}
             <div class="col-auto">
               <ButtonDropdown>
-                <DropdownToggle color="secondary" caret class="btn-sm">
-                  Filter by Activity
+                <DropdownToggle color="secondary" outline caret class="btn-sm text-dark">
+                  {#if selectedActivity}
+                  <Icon name="filter-square-fill" />
+                  {:else}
+                  <Icon name="filter-square" />
+                  {/if}
+                  <span class="mx-1">Filter by Activity</span>
                 </DropdownToggle>
                 <DropdownMenu>
+                  <DropdownItem on:click={selectActivity}>All Activities</DropdownItem>
+                  <DropdownItem divider />
                   {#each possibleActivities as activity}
-                    <DropdownItem>{activity}</DropdownItem>                    
+                    <DropdownItem on:click={selectActivity} data-value={activity}>{activity}</DropdownItem>                    
                   {/each}
                 </DropdownMenu>
               </ButtonDropdown>
@@ -170,6 +194,7 @@
           </thead>
           <tbody class="table-group-divider">
             {#each ($notes || []) as note, noteIdx}
+              {#if selectedActivity == null || selectedActivity == note.activity}
               <tr>
                 <!-- <th scope="row">
                   {noteIdx}
@@ -195,6 +220,7 @@
                   {/if}
                 </td>
               </tr>
+              {/if}
             {/each}
           </tbody>
         </Table>

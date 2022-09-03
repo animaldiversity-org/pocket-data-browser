@@ -179,7 +179,7 @@ class NoteManager {
     
   }
 
-  static async downloadNotes() {
+  static async downloadNotes(selectedActivity) {
     let token = AuthManager.getUser();
     if (!token) {
       console.log("-- syncNotes: no token");
@@ -197,7 +197,8 @@ class NoteManager {
       },
       mode: 'cors',
       body: JSON.stringify({
-        workspace_slug: token.currentWorkspace
+        workspace_slug: token.currentWorkspace,
+        activity: [selectedActivity]
       })
     })
     .then(async res => ({
