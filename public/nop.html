@@ -8,5 +8,11 @@
 </head>
 <body>
   <pre>NOP</pre>
+  <script>
+    let authtoken = localStorage.getItem('authtoken');
+    if ( authtoken && authtoken.indexOf('user_id') < 0 ) {
+      localStorage.removeItem('authtoken');
+    }
+  </script>
 </body>
 </html>

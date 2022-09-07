@@ -21,6 +21,10 @@ export class AuthManager {
   static isAuthenticated() {
     const token = localStorage.getItem('authtoken');
     if (token) {
+      if ( token.indexOf('user_id') < 0 ) {
+        localStorage.removeItem('authtoken');
+        return false;
+      }
       return true;
     }
     return false;
@@ -43,6 +47,11 @@ export class AuthManager {
     })
     .then(res => res.json())
     .then(json => {
+      console.log("-- login", json);
+      if (json.non_field_errors) {
+        alert(`Could not log in as user ${username} with that password.`);
+        return;
+      }
       localStorage.setItem('authtoken', JSON.stringify(json));
       remoteUser.set(json);
       return json;
@@ -91,6 +100,7 @@ export class AuthManager {
     const token = AuthManager.getUser();
 
     if ( workspaceSlug === undefined ) {
+      console.log("-- token", token);
       workspaceSlug = token.currentWorkspace;
     }
 

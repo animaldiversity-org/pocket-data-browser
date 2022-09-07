@@ -147,6 +147,19 @@
         gap: 1rem;
       }
 
+      @supports (-webkit-touch-callout: none) and (not (translate: none)) {
+        .gap-1 > *:not(:last-child) {
+          margin-right: 0.25rem;
+        }
+        .gap-2 > *:not(:last-child) {
+          margin-right: 0.5rem;
+        }
+        .gap-3 > *:not(:last-child) {
+          margin-right: 1rem;
+        }
+      }
+
+
       /* .btn.navbar-toggler:active .navbar-toggler-icon,
       .btn.navbar-toggler:hover .navbar-toggler-icon {
         filter: invert(1);
