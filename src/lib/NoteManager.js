@@ -131,6 +131,20 @@ class NoteManager {
 
     console.log("-- syncNotes", lastSynced);
 
+    // need to do an update
+    let check = await pocketDB.notesdb
+      .filter((v) => { return v.owner != 'demo' && (v.updatedAt >= lastSynced || v.lastSynced == '0000-00-00T00:00:00+0000') })
+      .toArray()
+
+    if ( check.length ) {
+      // we have unsynced notes that were never set
+      check.forEach(async (note) => {
+        let badToken = note.syncToken;
+        await pocketDB.notesdb.update(note.id, { syncToken: get(syncData).syncToken});
+        console.log("--> updated", note.id, badToken, get(syncData).syncToken);
+      })
+    }
+
     let notes = await pocketDB.notesdb
       .where('syncToken').equals(get(syncData).syncToken)
       .filter((v) => { return v.owner != 'demo' && ( v.updatedAt >= lastSynced || v.lastSynced == '0000-00-00T00:00:00+0000' ) })

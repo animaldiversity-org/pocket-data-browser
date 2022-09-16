@@ -12,7 +12,7 @@ export const syncData = writable({}, set => {
   let data = JSON.parse(localStorage.getItem('syncData') || '{}');
   if ( data.syncToken === undefined ) {
     data.syncToken = (1000 * Math.random()).toString();
-    localStorage.setItem('syncData', JSON.stringify(syncData));
+    localStorage.setItem('syncData', JSON.stringify(data));
   }
   set(data);
 });
