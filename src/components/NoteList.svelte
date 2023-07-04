@@ -107,7 +107,7 @@
 
   function downloadNotes(event) {
     event.preventDefault();
-    NoteManager.downloadNotes(selectedActivity);
+    NoteManager.downloadNotes(selectedActivity, username);
   }
 
   $: notes = queries[username];

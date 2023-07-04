@@ -57,6 +57,7 @@ export default defineConfig({
     svelte()
   ],
   server: {
+    port: 7173,
     proxy: {
       '/api-token-auth': {
         target: 'http://127.0.0.1:8000',
