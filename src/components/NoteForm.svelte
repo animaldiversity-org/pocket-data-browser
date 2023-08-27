@@ -256,6 +256,7 @@
     </Row>
     <Row class="mb-1">
       <Col>
+        {#if filteredRosterData.length}
         <Accordion class="mb-3">
           <AccordionItem> <!--  on:toggle={resortObservers} -->
             <div slot="header">
@@ -285,6 +286,7 @@
             {/if}
           </AccordionItem>
         </Accordion>
+        {/if}
       </Col>
     </Row>
     <Row class="mb-1">
